@@ -57,6 +57,26 @@ effect of reflection (see "Confounds" in the proposal).
 
 ## Setup
 
+### Option A — Docker (recommended; live reload)
+
+```bash
+cp .env.example .env          # add your GEMINI_API_KEY
+docker compose up app         # demo at http://localhost:8501, auto-reloads on edits
+```
+
+Run the pipeline steps in the same image:
+
+```bash
+docker compose run --rm app python -m src.ingest.ingest
+docker compose run --rm app python -m src.retrieval.retriever "early blight tomato"
+docker compose run --rm app python -m eval.run_benchmark
+```
+
+The project is bind-mounted into the container, so any source edit on the host
+immediately re-runs the Streamlit app (`--server.runOnSave`, poll watcher).
+
+### Option B — local venv
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate

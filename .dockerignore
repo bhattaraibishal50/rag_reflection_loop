@@ -1,0 +1,14 @@
+.git
+.gitignore
+.venv
+venv
+__pycache__
+*.pyc
+.env
+.DS_Store
+.ipynb_checkpoints
+chroma_db
+eval/results/*
+!eval/results/.gitkeep
+notebooks
+*.md
