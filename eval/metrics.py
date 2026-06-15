@@ -5,6 +5,7 @@ function is validated against humans in judge_validation.py before being trusted
 """
 from __future__ import annotations
 
+import asyncio
 import json
 
 from config.config import cfg
@@ -41,13 +42,50 @@ def hallucination_rate(diagnosis: str, context: str, true_label: str,
         return {"claims": [], "hallucination_rate": None}
 
 
-def faithfulness_score(diagnosis: str, context: str) -> float:
-    """Faithfulness via RAGAS.
+# --- RAGAS faithfulness (lazy-initialised; needs an evaluator LLM + API key) ---
+_faithfulness = None  # cached (metric, SingleTurnSample-class) tuple
 
-    TODO: wire to ragas.metrics.faithfulness with your LLM + a sample object.
-    Returns a 0-1 score. Stubbed until the API run.
+
+def _get_faithfulness():
+    """Build the RAGAS Faithfulness metric backed by the Gemini judge model.
+
+    Faithfulness decomposes the answer into claims and checks each against the
+    retrieved context — it needs an LLM but no embeddings. We reuse cfg.judge_model
+    (a different family from Actor/Critic) to stay consistent with §3.1.
     """
-    raise NotImplementedError("Wire to RAGAS faithfulness before the benchmark run.")
+    global _faithfulness
+    if _faithfulness is None:
+        cfg.validate()
+        from langchain_google_genai import ChatGoogleGenerativeAI
+        from ragas import SingleTurnSample
+        from ragas.llms import LangchainLLMWrapper
+        from ragas.metrics import Faithfulness
+
+        evaluator_llm = LangchainLLMWrapper(
+            ChatGoogleGenerativeAI(
+                model=cfg.judge_model, google_api_key=cfg.api_key, temperature=0.0
+            )
+        )
+        _faithfulness = (Faithfulness(llm=evaluator_llm), SingleTurnSample)
+    return _faithfulness
+
+
+def faithfulness_score(diagnosis: str, context: str | list[str], query: str) -> float:
+    """RAGAS faithfulness in [0, 1]: fraction of the diagnosis's claims that are
+    supported by the retrieved context. Higher = less hallucination.
+
+    `context` may be the joined string from Retriever.as_context (split back into the
+    per-passage list it was built from) or an already-split list.
+    """
+    metric, SingleTurnSample = _get_faithfulness()
+    contexts = context.split("\n\n") if isinstance(context, str) else context
+    sample = SingleTurnSample(
+        user_input=query,
+        response=diagnosis,
+        retrieved_contexts=[c for c in contexts if c.strip()],
+    )
+    # single_turn_ascore is async; run it on a fresh event loop for CLI/batch use.
+    return asyncio.run(metric.single_turn_ascore(sample))
 
 
 def rejection_correct(diagnosis: str, true_label: str) -> bool:

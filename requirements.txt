@@ -13,6 +13,7 @@ sentence-transformers>=3.0.0  # local embedding fallback (offline reproducibilit
 
 # --- Evaluation ---
 ragas>=0.2.0                 # faithfulness / context precision
+langchain-google-genai>=2.0.0   # Gemini evaluator LLM for RAGAS
 scikit-learn>=1.5.0          # Cohen's kappa, precision/recall
 statsmodels>=0.14.0          # Fleiss' kappa (3+ raters)
 pandas>=2.2.0

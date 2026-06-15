@@ -10,7 +10,7 @@ from __future__ import annotations
 import pandas as pd
 
 from config.config import cfg
-from eval.metrics import hallucination_rate, rejection_correct
+from eval.metrics import faithfulness_score, hallucination_rate, rejection_correct
 from src import system_a_baseline
 from src.system_b_reflection import graph as system_b
 
@@ -32,6 +32,11 @@ def run() -> pd.DataFrame:
                 res = system.diagnose(image, query)
                 hr = hallucination_rate(res["diagnosis"], res["context"],
                                         case["true_label"], image_path=image)
+                try:
+                    faith = faithfulness_score(res["diagnosis"], res["context"], query)
+                except Exception as e:  # don't let one RAGAS failure abort the whole run
+                    print(f"  [faithfulness failed for {case['image_filename']}: {e}]")
+                    faith = None
                 rows.append({
                     "image": case["image_filename"],
                     "true_label": case["true_label"],
@@ -41,6 +46,7 @@ def run() -> pd.DataFrame:
                     "iterations": res["iterations"],
                     "latency_s": res["latency_s"],
                     "hallucination_rate": hr.get("hallucination_rate"),
+                    "faithfulness": faith,
                     "rejection_correct": rejection_correct(res["diagnosis"], case["true_label"]),
                 })
     df = pd.DataFrame(rows)
@@ -51,8 +57,9 @@ def run() -> pd.DataFrame:
 
 def summarize(df: pd.DataFrame) -> None:
     print("\n=== Summary by system (mean over runs) ===")
-    print(df.groupby("system")[["hallucination_rate", "latency_s", "iterations"]].agg(
-        ["mean", "std"]))
+    print(df.groupby("system")[
+        ["hallucination_rate", "faithfulness", "latency_s", "iterations"]
+    ].agg(["mean", "std"]))
     print("\n=== Cross-domain rejection accuracy (RQ3) ===")
     cd = df[df["case_type"] == "cross_domain"]
     if not cd.empty:
