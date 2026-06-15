@@ -17,13 +17,12 @@ class Retriever:
     def __init__(self):
         client = chromadb.PersistentClient(path=str(cfg.chroma_dir))
         self.collection = client.get_collection(cfg.collection_name)
-        from sentence_transformers import SentenceTransformer
-
-        self._embedder = SentenceTransformer("all-MiniLM-L6-v2")
 
     def search(self, query: str, top_k: int | None = None) -> list[dict]:
+        from src.llm.embeddings import embed_query
+
         k = top_k or cfg.top_k
-        q_emb = self._embedder.encode([query]).tolist()
+        q_emb = [embed_query(query)]  # task_type=RETRIEVAL_QUERY (matches ingest asymmetry)
         res = self.collection.query(query_embeddings=q_emb, n_results=k)
         return [
             {"text": doc, "source": meta.get("source"), "distance": dist}

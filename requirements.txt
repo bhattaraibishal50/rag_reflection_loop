@@ -9,7 +9,8 @@ langchain-text-splitters>=0.3.0   # recursive chunking
 # --- RAG / vector store (local, reproducible) ---
 chromadb>=0.5.0
 pypdf>=4.0.0                  # PDF text extraction
-sentence-transformers>=3.0.0  # local embedding fallback (offline reproducibility)
+# sentence-transformers>=3.0.0  # optional: local embedding fallback for offline dev
+#   (not used by default — embeddings now come from Gemini, see src/llm/embeddings.py)
 
 # --- Evaluation ---
 ragas>=0.2.0                 # faithfulness / context precision

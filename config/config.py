@@ -28,7 +28,9 @@ class Config:
     critic_model: str = os.getenv("CRITIC_MODEL", "gemini-2.5-flash")
     # Judge SHOULD differ from Actor/Critic family to reduce self-bias (see proposal 3.1).
     judge_model: str = os.getenv("JUDGE_MODEL", "gemini-2.5-flash")
-    embedding_model: str = os.getenv("EMBEDDING_MODEL", "text-embedding-005")
+    # gemini-embedding-001 is the Gemini Developer API (AI Studio key) embedding model.
+    # (text-embedding-005 is a Vertex-only name; use it only if you switch to Vertex.)
+    embedding_model: str = os.getenv("EMBEDDING_MODEL", "gemini-embedding-001")
 
     api_key: str = os.getenv("GEMINI_API_KEY", "")
 

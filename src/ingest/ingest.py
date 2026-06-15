@@ -39,16 +39,11 @@ def _chunk(docs: list[tuple[str, str]]) -> tuple[list[str], list[dict]]:
 
 
 def _embed(texts: list[str]) -> list[list[float]]:
-    """Embed chunks.
+    """Embed chunks with Gemini (cfg.embedding_model), task_type=RETRIEVAL_DOCUMENT."""
+    from src.llm.embeddings import embed_documents
 
-    TODO: swap to Gemini embeddings (cfg.embedding_model) via the genai SDK for the
-    final run. A local sentence-transformers model is used here so ingestion works
-    offline and reproducibly during development.
-    """
-    from sentence_transformers import SentenceTransformer
-
-    model = SentenceTransformer("all-MiniLM-L6-v2")
-    return model.encode(texts, show_progress_bar=True).tolist()
+    print(f"Embedding {len(texts)} chunks with {cfg.embedding_model}...")
+    return embed_documents(texts)
 
 
 def main() -> None:
