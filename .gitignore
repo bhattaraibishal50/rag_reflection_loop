@@ -1,0 +1,26 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Data artifacts (keep folder structure via .gitkeep, ignore heavy contents)
+data/images/*
+!data/images/.gitkeep
+data/knowledge_base/*
+!data/knowledge_base/.gitkeep
+
+# Vector store
+chroma_db/
+
+# Eval outputs
+eval/results/*
+!eval/results/.gitkeep
+
+# OS / editor
+.DS_Store
+.ipynb_checkpoints/

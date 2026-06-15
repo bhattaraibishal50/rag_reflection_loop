@@ -1,0 +1,81 @@
+# Crop Reflection RAG
+
+**Evaluating Multi-Agent Reflection Loops for Reducing Hallucinations in Multimodal Agricultural Diagnostics**
+
+This project benchmarks two diagnostic pipelines on visually ambiguous crop-disease images:
+
+- **System A (baseline):** single-pass Retrieval-Augmented Generation (RAG).
+- **System B (experimental):** a multi-agent **Actor–Critic reflection loop** built with LangGraph.
+
+The goal is to measure whether the reflection loop reduces hallucinations (RQ1), at what
+latency cost (RQ2), and whether it correctly rejects out-of-scope queries (RQ3).
+
+---
+
+## Architecture
+
+```
+Image + query
+   ├──────────────► System A: retrieve → diagnose (one pass)
+   │
+   └──────────────► System B: ACTOR (retrieve+diagnose)
+                              → CRITIC (find modality contradictions)
+                              → refine & loop (max 3) → final diagnosis
+```
+
+Both systems share the **same Actor model, base prompt, retriever, and knowledge base**.
+The *only* difference is the Critic + reflection loop — so the comparison isolates the
+effect of reflection (see "Confounds" in the proposal).
+
+---
+
+## Project layout
+
+```
+.
+├── config/                 # central configuration (models, paths, loop cap)
+├── data/
+│   ├── images/             # 100 adversarial test images
+│   ├── ground_truth.csv    # image filename → verified disease label
+│   └── knowledge_base/     # FAO / agronomy PDFs for the RAG corpus
+├── prompts/                # Actor, Critic system prompts + judge rubric
+├── src/
+│   ├── ingest/             # PDF → chunk → embed → Chroma
+│   ├── retrieval/          # vector search wrapper
+│   ├── llm/                # model client (swappable)
+│   ├── system_a_baseline.py
+│   ├── system_b_reflection/   # LangGraph Actor–Critic graph
+│   └── app/                # FastAPI + Streamlit demo
+├── eval/
+│   ├── run_benchmark.py    # run all cases through A and B
+│   ├── metrics.py          # hallucination rate, faithfulness, latency
+│   └── judge_validation.py # Cohen's kappa: LLM judge vs humans
+└── notebooks/
+```
+
+---
+
+## Setup
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env          # then add your GEMINI_API_KEY
+```
+
+## Build order (validate each step before the next)
+
+1. Add images + fill `data/ground_truth.csv`; drop PDFs in `data/knowledge_base/`.
+2. `python -m src.ingest.ingest`            → build the Chroma index.
+3. `python -m src.retrieval.retriever "test query"`  → **GATE: confirm good passages.**
+4. `python -m src.system_a_baseline <image>` → baseline runs end-to-end.
+5. `python -m src.system_b_reflection.graph <image>` → loop runs and reflects.
+6. `python -m eval.judge_validation`         → **GATE: Cohen's kappa ≥ 0.6.**
+7. `python -m eval.run_benchmark`            → full results.
+8. `streamlit run src/app/app.py`            → demo.
+
+## Status
+
+Skeleton scaffolded. Every module has a working structure with `TODO` markers where
+real logic / API calls go. Nothing is wired to a paid API yet.

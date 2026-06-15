@@ -1,0 +1,26 @@
+# --- Core LLM / multimodal ---
+google-genai>=1.0.0            # Gemini (Actor, Critic) — new unified SDK
+
+# --- Orchestration ---
+langgraph>=0.2.0              # stateful Actor-Critic graph
+langchain-core>=0.3.0
+langchain-text-splitters>=0.3.0   # recursive chunking
+
+# --- RAG / vector store (local, reproducible) ---
+chromadb>=0.5.0
+pypdf>=4.0.0                  # PDF text extraction
+sentence-transformers>=3.0.0  # local embedding fallback (offline reproducibility)
+
+# --- Evaluation ---
+ragas>=0.2.0                 # faithfulness / context precision
+scikit-learn>=1.5.0          # Cohen's kappa, precision/recall
+statsmodels>=0.14.0          # Fleiss' kappa (3+ raters)
+pandas>=2.2.0
+matplotlib>=3.9.0
+
+# --- Demo / serving ---
+fastapi>=0.115.0
+uvicorn>=0.30.0
+streamlit>=1.39.0
+python-dotenv>=1.0.0
+pillow>=10.0.0               # image loading

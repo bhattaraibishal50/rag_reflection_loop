@@ -1,0 +1,6 @@
+image_filename,true_label,crop,case_type,notes
+# case_type: "ambiguous" (visually similar diseases) or "cross_domain" (out-of-scope, RQ3)
+# For cross_domain rows, true_label should be "REJECT" — the correct answer is to refuse.
+tomato_earlyblight_001.jpg,Early Blight,tomato,ambiguous,looks similar to Septoria
+tomato_septoria_001.jpg,Septoria Leaf Spot,tomato,ambiguous,looks similar to Early Blight
+potato_image_with_corn_query_001.jpg,REJECT,potato,cross_domain,query asks about corn disease

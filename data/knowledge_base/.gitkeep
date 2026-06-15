@@ -1,0 +1,2 @@
+# Drop FAO / agronomy / extension-service PDFs here.
+# They become the RAG corpus when you run: python -m src.ingest.ingest
