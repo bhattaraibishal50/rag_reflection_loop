@@ -9,8 +9,10 @@ Commands (in the order you'd normally run them):
     retrieve "<query>"       GATE: inspect retrieved passages
     check                    GATE: verify key + KB + index + images are ready
     diagnose <image>         run one diagnosis (--system a|b)
+    make-validation-subset   run a subset + judge labels for judge validation
     validate-judge           GATE: Cohen's kappa of the LLM judge vs humans (>= 0.6)
     benchmark                run all cases through A and B; print stats
+    plots                    generate Chapter 4 figures from the results
     demo                     launch the Streamlit comparison app
 
 Imports are lazy per-command, so `python cli.py --help` and offline commands never
@@ -58,6 +60,11 @@ def _cmd_diagnose(args: argparse.Namespace) -> None:
     print(f"\n[{tail}]")
 
 
+def _cmd_make_validation_subset(args: argparse.Namespace) -> None:
+    from eval.make_validation_subset import make_subset
+    make_subset(args.cases)
+
+
 def _cmd_validate_judge(args: argparse.Namespace) -> None:
     from eval.judge_validation import main
     main()
@@ -66,6 +73,11 @@ def _cmd_validate_judge(args: argparse.Namespace) -> None:
 def _cmd_benchmark(args: argparse.Namespace) -> None:
     from eval.run_benchmark import run, summarize
     summarize(run())
+
+
+def _cmd_plots(args: argparse.Namespace) -> None:
+    from eval.plots import make_plots
+    make_plots()
 
 
 def _cmd_demo(args: argparse.Namespace) -> None:
@@ -99,11 +111,20 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--query", default="What disease does this plant have?")
     sp.set_defaults(func=_cmd_diagnose)
 
+    sp = sub.add_parser("make-validation-subset",
+                        help="generate the subset + judge labels for judge validation")
+    sp.add_argument("cases", nargs="?", type=int, default=13,
+                    help="number of cases to sample (outputs = 2x this; default 13)")
+    sp.set_defaults(func=_cmd_make_validation_subset)
+
     sp = sub.add_parser("validate-judge", help="GATE: Cohen's kappa of judge vs humans")
     sp.set_defaults(func=_cmd_validate_judge)
 
     sp = sub.add_parser("benchmark", help="run the full A-vs-B benchmark + stats")
     sp.set_defaults(func=_cmd_benchmark)
+
+    sp = sub.add_parser("plots", help="generate Chapter 4 figures from benchmark results")
+    sp.set_defaults(func=_cmd_plots)
 
     sp = sub.add_parser("demo", help="launch the Streamlit comparison app")
     sp.set_defaults(func=_cmd_demo)

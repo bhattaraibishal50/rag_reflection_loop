@@ -4,10 +4,15 @@
 # directly; it is pulled in transitively by langchain-google-genai.
 
 # --- Orchestration ---
-langgraph>=0.2.0              # stateful Actor-Critic graph
-langchain-core>=0.3.0        # messages (System/Human), runnables
-langchain-google-genai>=2.0.0   # ChatGoogleGenerativeAI + GoogleGenerativeAIEmbeddings
-langchain-text-splitters>=0.3.0   # recursive chunking
+# Upper bounds pin the LangChain/RAGAS stack to one compatible generation.
+# Without them, pip floats to langchain 1.x + ragas 0.4.x, which are mutually
+# incompatible (ragas imports a langchain_community path 1.x removed). Reproducible
+# environments also matter for a thesis — keep this matrix locked.
+langgraph>=0.2.0,<0.3            # stateful Actor-Critic graph
+langchain-core>=0.3.0,<0.4       # messages (System/Human), runnables
+langchain-community>=0.3.0,<0.4  # pulled in by ragas; pin to match core
+langchain-google-genai>=2.0.0,<3.0   # ChatGoogleGenerativeAI + GoogleGenerativeAIEmbeddings
+langchain-text-splitters>=0.3.0,<0.4 # recursive chunking
 
 # --- RAG / vector store (local, reproducible) ---
 chromadb>=0.5.0
@@ -16,7 +21,7 @@ pypdf>=4.0.0                  # PDF text extraction
 #   (not used by default — embeddings now come from Gemini, see src/llm/embeddings.py)
 
 # --- Evaluation ---
-ragas>=0.2.0                 # faithfulness / context precision (uses the LangChain Gemini LLM above)
+ragas>=0.2.0,<0.3            # faithfulness / context precision (uses the LangChain Gemini LLM above)
 scikit-learn>=1.5.0          # Cohen's kappa, precision/recall
 statsmodels>=0.14.0          # Fleiss' kappa (3+ raters); McNemar's paired A-vs-B test
 numpy>=1.26.0                # bootstrap confidence intervals in run_benchmark

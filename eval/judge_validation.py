@@ -1,10 +1,14 @@
-"""GATE (proposal §3.1): validate the LLM judge against human annotators BEFORE trusting it.
+"""GATE (proposal §4.5): validate the LLM judge against human annotators BEFORE trusting it.
 
 Workflow:
-1. Generate diagnoses for a stratified subset (25-30) and save them.
-2. Humans label each claim using prompts/judge_rubric.md -> data/human_labels.csv
-3. Run the LLM judge on the same claims.
-4. Compute Cohen's kappa. Only proceed to the full benchmark if kappa >= 0.6.
+1. `python cli.py make-validation-subset` runs a stratified subset through both systems,
+   has the judge label each claim, and writes:
+     eval/results/judge_labels.csv           (claim_id, judge_label)
+     eval/results/human_labels_template.csv  (claim_id, system, image, claim_text, human_label)
+2. 1-2 annotators fill the `human_label` column (1=hallucinated, 0=supported) using
+   prompts/judge_rubric.md, then save the file as data/human_labels.csv.
+3. This script computes Cohen's / Fleiss' kappa. Only proceed to the full benchmark if
+   kappa >= 0.6 (Landis & Koch "substantial").
 
 Run:  python cli.py validate-judge
 """

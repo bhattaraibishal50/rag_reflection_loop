@@ -28,11 +28,17 @@ check:  ## GATE: verify key + KB + index + images are ready
 diagnose:  ## Diagnose one image:  make diagnose IMG=path.jpg SYS=b
 	$(PY) cli.py diagnose $(IMG) --system $(or $(SYS),b)
 
+subset:  ## Generate judge-validation subset + judge labels
+	$(PY) cli.py make-validation-subset $(or $(CASES),13)
+
 validate:  ## GATE: Cohen's kappa of the LLM judge vs humans
 	$(PY) cli.py validate-judge
 
 benchmark:  ## Run the full A-vs-B benchmark + stats
 	$(PY) cli.py benchmark
+
+plots:  ## Generate Chapter 4 figures from benchmark results
+	$(PY) cli.py plots
 
 demo:  ## Launch the Streamlit app locally
 	$(PY) cli.py demo
@@ -43,5 +49,8 @@ up:  ## Start the demo via Docker (http://localhost:8501)
 build:  ## Build the Docker image
 	docker compose build
 
+smoke:  ## Run the end-to-end smoke test (mocked LLM, no API/index)
+	$(PY) tests/smoke_test.py
+
 test:  ## Byte-compile all Python (quick sanity check)
-	$(PY) -m compileall -q cli.py config src eval
+	$(PY) -m compileall -q cli.py config src eval tests

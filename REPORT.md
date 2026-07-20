@@ -157,6 +157,8 @@ The shift from passive models to *agentic AI* lets systems set goals, use tools,
 
 Reflexion (Shinn et al., 2023) introduced a framework in which an agent converts environment feedback into natural-language reflections stored in episodic memory, improving over trial-and-error. Reflection effectively simulates deliberate "System 2" reasoning (Kahneman, 2011) in place of the reactive "System 1" response of a single-pass LLM. Applied to diagnosis, an Actor–Critic loop lets a Critic surface unsupported claims before the answer is finalised.
 
+**Reflection is not a guaranteed improvement.** The mechanism has documented failure modes, and this study treats its benefit as an open empirical question rather than an assumption. Huang et al. (2024) show that large language models often *cannot* self-correct reasoning without an external signal, and that naïve self-critique can *degrade* accuracy through over-correction — the Critic flags a correct answer and the Actor revises it into a wrong one. Reflexion itself works largely *because* it receives external environment feedback; pure introspection is far weaker. Critically, the Critic is drawn from the same model family as the Actor, so it may share the Actor's blind spots and fail to detect an error at all. The specific justification for the present design is that the Critic does not merely *re-think* the text — it *re-examines the image*, giving a weak external signal (the visual ground truth) against which textual claims are checked. Whether that is enough to reduce modality-misalignment hallucinations, and at what latency cost, is exactly what this study measures; a null or negative result is a valid outcome.
+
 **Figure 2. System B — the Actor–Critic reflection loop.**
 ```mermaid
 flowchart TD
@@ -312,7 +314,7 @@ Each objective (O1–O4, §1.4) will be addressed against the measured results: 
 
 ## 5.3 Implications
 
-If the reflection loop reduces hallucinations at acceptable latency, it offers a path toward trustworthy, evidence-backed mobile diagnostics and supports the broader move from reactive to deliberate reasoning in precision agriculture (Srinivasu et al., 2026).
+If the reflection loop reduces hallucinations at acceptable latency, it offers a path toward trustworthy, evidence-backed mobile diagnostics and supports the broader move from reactive to deliberate reasoning in precision agriculture (Srinivasu et al., 2026). Conversely, if reflection yields little gain — or if over-correction and added latency outweigh its benefit (cf. Huang et al., 2024) — that is an equally informative result: it would indicate that image-grounded self-critique alone is insufficient for modality-misalignment errors, and that a stronger external signal (e.g. a dedicated vision classifier feeding the Critic) is required. The contribution stands either way, because the quantity being established — *how much* reflection helps on visually ambiguous crop cases, and at what cost — is currently unmeasured.
 
 ## 5.4 Threats to Validity
 
@@ -335,6 +337,8 @@ If the reflection loop reduces hallucinations at acceptable latency, it offers a
 Dongre, V., Gui, C., Garg, S., Nayyeri, H., Tur, G., Hakkani-Tür, D., & Adve, V. S. (2025). *MIRAGE: A Benchmark for Multimodal Information-Seeking and Reasoning in Agricultural Expert-Guided Conversations*. NeurIPS 2025. arXiv:2506.20100.
 
 Es, S., James, J., Espinosa-Anke, L., & Schockaert, S. (2023). *RAGAS: Automated Evaluation of Retrieval Augmented Generation*. arXiv:2309.15217.
+
+Huang, J., Chen, X., Mishra, S., Zheng, H. S., Yu, A. W., Song, X., & Zhou, D. (2024). *Large Language Models Cannot Self-Correct Reasoning Yet*. ICLR 2024. arXiv:2310.01798.
 
 Hughes, D. P., & Salathé, M. (2015). *An open access repository of images on plant health to enable the development of mobile disease diagnostics* (PlantVillage). arXiv:1511.08060.
 
