@@ -13,7 +13,13 @@ help:  ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 		| awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
 
-prepare:  ## Scaffold ground_truth.csv:  make prepare DATASET=/path/to/dataset
+fetch:  ## Download a labelled PlantVillage image pool from HF (PER_CLASS=50)
+	$(PY) cli.py fetch-images --per-class $(or $(PER_CLASS),50)
+
+kb:  ## Download authoritative crop-disease PDFs into the knowledge base
+	$(PY) cli.py fetch-kb
+
+prepare:  ## Scaffold ground_truth.csv from a LOCAL folder:  make prepare DATASET=/path
 	$(PY) cli.py prepare-data $(DATASET) --per-class $(or $(PER_CLASS),20)
 
 ingest:  ## Build the Chroma index from KB PDFs

@@ -1,0 +1,503 @@
+# RAW POOL — curate into data/ground_truth.csv. Keep ambiguous pairs;
+# turn some off_crop rows into cross_domain (true_label=REJECT, off-crop query).
+image_filename,true_label,crop,case_type,notes
+corn___common_rust_000.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_001.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_002.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_003.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_004.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_005.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_006.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_007.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_008.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_009.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_010.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_011.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_012.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_013.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_014.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_015.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_016.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_017.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_018.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_019.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_020.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_021.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_022.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_023.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_024.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_025.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_026.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_027.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_028.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_029.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_030.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_031.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_032.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_033.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_034.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_035.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_036.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_037.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_038.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_039.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_040.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_041.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_042.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_043.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_044.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_045.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_046.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_047.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_048.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+corn___common_rust_049.jpg,Common Rust,corn,off_crop,pool from Corn___Common_rust
+grape___black_rot_000.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_001.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_002.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_003.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_004.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_005.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_006.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_007.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_008.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_009.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_010.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_011.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_012.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_013.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_014.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_015.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_016.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_017.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_018.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_019.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_020.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_021.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_022.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_023.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_024.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_025.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_026.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_027.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_028.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_029.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_030.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_031.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_032.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_033.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_034.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_035.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_036.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_037.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_038.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_039.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_040.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_041.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_042.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_043.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_044.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_045.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_046.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_047.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_048.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+grape___black_rot_049.jpg,Black Rot,grape,off_crop,pool from Grape___Black_rot
+potato___early_blight_000.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_001.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_002.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_003.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_004.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_005.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_006.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_007.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_008.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_009.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_010.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_011.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_012.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_013.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_014.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_015.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_016.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_017.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_018.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_019.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_020.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_021.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_022.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_023.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_024.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_025.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_026.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_027.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_028.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_029.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_030.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_031.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_032.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_033.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_034.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_035.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_036.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_037.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_038.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_039.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_040.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_041.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_042.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_043.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_044.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_045.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_046.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_047.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_048.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___early_blight_049.jpg,Early Blight,potato,ambiguous,pool from Potato___Early_blight
+potato___late_blight_000.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_001.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_002.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_003.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_004.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_005.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_006.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_007.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_008.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_009.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_010.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_011.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_012.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_013.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_014.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_015.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_016.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_017.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_018.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_019.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_020.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_021.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_022.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_023.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_024.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_025.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_026.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_027.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_028.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_029.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_030.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_031.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_032.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_033.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_034.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_035.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_036.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_037.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_038.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_039.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_040.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_041.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_042.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_043.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_044.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_045.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_046.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_047.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_048.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+potato___late_blight_049.jpg,Late Blight,potato,ambiguous,pool from Potato___Late_blight
+tomato___bacterial_spot_000.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_001.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_002.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_003.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_004.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_005.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_006.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_007.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_008.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_009.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_010.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_011.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_012.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_013.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_014.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_015.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_016.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_017.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_018.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_019.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_020.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_021.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_022.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_023.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_024.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_025.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_026.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_027.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_028.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_029.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_030.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_031.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_032.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_033.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_034.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_035.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_036.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_037.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_038.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_039.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_040.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_041.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_042.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_043.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_044.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_045.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_046.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_047.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_048.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___bacterial_spot_049.jpg,Bacterial Spot,tomato,ambiguous,pool from Tomato___Bacterial_spot
+tomato___early_blight_000.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_001.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_002.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_003.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_004.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_005.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_006.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_007.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_008.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_009.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_010.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_011.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_012.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_013.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_014.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_015.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_016.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_017.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_018.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_019.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_020.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_021.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_022.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_023.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_024.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_025.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_026.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_027.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_028.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_029.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_030.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_031.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_032.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_033.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_034.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_035.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_036.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_037.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_038.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_039.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_040.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_041.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_042.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_043.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_044.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_045.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_046.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_047.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_048.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___early_blight_049.jpg,Early Blight,tomato,ambiguous,pool from Tomato___Early_blight
+tomato___late_blight_000.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_001.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_002.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_003.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_004.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_005.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_006.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_007.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_008.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_009.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_010.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_011.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_012.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_013.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_014.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_015.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_016.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_017.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_018.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_019.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_020.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_021.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_022.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_023.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_024.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_025.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_026.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_027.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_028.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_029.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_030.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_031.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_032.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_033.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_034.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_035.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_036.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_037.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_038.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_039.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_040.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_041.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_042.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_043.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_044.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_045.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_046.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_047.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_048.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___late_blight_049.jpg,Late Blight,tomato,ambiguous,pool from Tomato___Late_blight
+tomato___leaf_mold_000.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_001.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_002.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_003.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_004.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_005.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_006.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_007.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_008.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_009.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_010.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_011.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_012.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_013.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_014.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_015.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_016.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_017.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_018.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_019.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_020.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_021.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_022.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_023.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_024.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_025.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_026.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_027.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_028.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_029.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_030.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_031.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_032.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_033.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_034.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_035.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_036.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_037.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_038.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_039.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_040.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_041.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_042.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_043.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_044.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_045.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_046.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_047.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_048.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___leaf_mold_049.jpg,Leaf Mold,tomato,ambiguous,pool from Tomato___Leaf_Mold
+tomato___septoria_leaf_spot_000.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_001.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_002.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_003.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_004.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_005.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_006.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_007.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_008.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_009.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_010.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_011.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_012.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_013.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_014.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_015.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_016.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_017.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_018.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_019.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_020.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_021.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_022.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_023.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_024.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_025.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_026.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_027.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_028.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_029.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_030.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_031.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_032.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_033.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_034.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_035.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_036.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_037.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_038.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_039.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_040.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_041.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_042.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_043.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_044.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_045.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_046.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_047.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_048.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___septoria_leaf_spot_049.jpg,Septoria Leaf Spot,tomato,ambiguous,pool from Tomato___Septoria_leaf_spot
+tomato___target_spot_000.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_001.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_002.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_003.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_004.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_005.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_006.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_007.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_008.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_009.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_010.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_011.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_012.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_013.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_014.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_015.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_016.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_017.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_018.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_019.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_020.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_021.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_022.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_023.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_024.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_025.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_026.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_027.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_028.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_029.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_030.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_031.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_032.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_033.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_034.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_035.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_036.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_037.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_038.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_039.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_040.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_041.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_042.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_043.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_044.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_045.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_046.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_047.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_048.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot
+tomato___target_spot_049.jpg,Target Spot,tomato,ambiguous,pool from Tomato___Target_Spot

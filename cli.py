@@ -4,7 +4,9 @@
 
 Commands (in the order you'd normally run them):
 
-    prepare-data <dataset>   scaffold data/ground_truth.csv from a class-folder dataset
+    fetch-images             download a labelled PlantVillage image pool from Hugging Face
+    fetch-kb                 download authoritative crop-disease PDFs into the knowledge base
+    prepare-data <dataset>   scaffold data/ground_truth.csv from a local class-folder dataset
     ingest                   build the Chroma index from data/knowledge_base/*.pdf
     retrieve "<query>"       GATE: inspect retrieved passages
     check                    GATE: verify key + KB + index + images are ready
@@ -22,6 +24,16 @@ from __future__ import annotations
 
 import argparse
 import sys
+
+
+def _cmd_fetch_images(args: argparse.Namespace) -> None:
+    from src.rag.fetch_plantvillage import fetch
+    fetch(args.per_class)
+
+
+def _cmd_fetch_kb(args: argparse.Namespace) -> None:
+    from src.rag.fetch_knowledge_base import fetch
+    fetch()
 
 
 def _cmd_prepare_data(args: argparse.Namespace) -> None:
@@ -89,7 +101,14 @@ def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="cli.py", description="Crop Reflection RAG pipeline.")
     sub = p.add_subparsers(dest="command", required=True)
 
-    sp = sub.add_parser("prepare-data", help="scaffold ground_truth.csv from a dataset folder")
+    sp = sub.add_parser("fetch-images", help="download a labelled PlantVillage image pool from HF")
+    sp.add_argument("--per-class", type=int, default=50, help="images per class (default 50)")
+    sp.set_defaults(func=_cmd_fetch_images)
+
+    sp = sub.add_parser("fetch-kb", help="download authoritative crop-disease PDFs into the KB")
+    sp.set_defaults(func=_cmd_fetch_kb)
+
+    sp = sub.add_parser("prepare-data", help="scaffold ground_truth.csv from a local dataset folder")
     sp.add_argument("dataset", help="path to dataset root (one sub-folder per class)")
     sp.add_argument("--per-class", type=int, default=20, help="max images sampled per class")
     sp.set_defaults(func=_cmd_prepare_data)
