@@ -1,8 +1,8 @@
 # Usage:
 #   docker compose up app                 # start the demo at http://localhost:8501
-#   docker compose run --rm app python -m src.ingest.ingest      # build the index
-#   docker compose run --rm app python -m src.retrieval.retriever "early blight"
-#   docker compose run --rm app python -m eval.run_benchmark
+#   docker compose run --rm app python cli.py ingest             # build the index
+#   docker compose run --rm app python cli.py retrieve "early blight"
+#   docker compose run --rm app python cli.py benchmark
 #
 # Live reload: the whole project is bind-mounted into /app, and Streamlit is launched
 # with --server.runOnSave, so editing any source file on the host re-runs the app.

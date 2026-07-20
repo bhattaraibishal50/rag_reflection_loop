@@ -10,7 +10,7 @@ ground_truth.csv scaffold with a human-readable label derived from the folder na
 You then EDIT the csv by hand to (1) keep only visually-ambiguous cases, and
 (2) add cross-domain rows (case_type=cross_domain, true_label=REJECT).
 
-Run:  python -m src.ingest.prepare_ground_truth /path/to/dataset --per-class 20
+Run:  python cli.py prepare-data /path/to/dataset --per-class 20
 """
 from __future__ import annotations
 
@@ -74,7 +74,7 @@ def scaffold(dataset: Path, per_class: int) -> None:
     print("\nNEXT (by hand):")
     print("  1. Keep the visually-ambiguous cases (e.g. Early Blight vs Septoria).")
     print(f"  2. Add cross-domain rows (~{cfg.adversarial_fraction:.0%}) with true_label=REJECT.")
-    print("  3. Trim to ~100 total, then run `python -m eval.preflight`.")
+    print("  3. Trim to ~100 total, then run `python cli.py check`.")
 
 
 def main() -> None:

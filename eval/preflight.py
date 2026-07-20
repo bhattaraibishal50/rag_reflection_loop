@@ -4,7 +4,7 @@ Verifies, without making any paid API call, that the pieces a real run needs are
 place: API key, knowledge-base PDFs, a built Chroma index, images, and a ground-truth
 file whose rows line up with the images on disk.
 
-Run:  python -m eval.preflight
+Run:  python cli.py check
 Exit code 0 = ready; 1 = something is missing.
 """
 from __future__ import annotations
@@ -37,7 +37,7 @@ def _check_kb() -> bool:
 
 def _check_index() -> bool:
     if not cfg.chroma_dir.exists():
-        print(f"{WARN} No Chroma index yet at {cfg.chroma_dir} — run `python -m src.ingest.ingest`.")
+        print(f"{WARN} No Chroma index yet at {cfg.chroma_dir} — run `python cli.py ingest`.")
         return False
     try:
         import chromadb
@@ -99,7 +99,7 @@ def main() -> None:
     ]
     print()
     if all(checks):
-        print("READY. Next: `python -m eval.judge_validation` then `python -m eval.run_benchmark`.")
+        print("READY. Next: `python cli.py validate-judge` then `python cli.py benchmark`.")
         sys.exit(0)
     print("NOT READY — resolve the [FAIL] items above first.")
     sys.exit(1)

@@ -6,7 +6,7 @@ Workflow:
 3. Run the LLM judge on the same claims.
 4. Compute Cohen's kappa. Only proceed to the full benchmark if kappa >= 0.6.
 
-Run:  python -m eval.judge_validation
+Run:  python cli.py validate-judge
 """
 from __future__ import annotations
 

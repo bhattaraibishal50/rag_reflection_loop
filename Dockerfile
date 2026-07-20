@@ -3,7 +3,8 @@ FROM python:3.12-slim
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=1
+    PIP_NO_CACHE_DIR=1 \
+    PYTHONPATH=/app
 
 WORKDIR /app
 
@@ -19,6 +20,10 @@ RUN pip install -r requirements.txt
 # Source is bind-mounted at runtime (see docker-compose) for live reload;
 # this COPY just makes the image usable standalone too.
 COPY . .
+
+# Entrypoint auto-builds the index on first `up` so the demo is self-contained.
+RUN chmod +x /app/docker-entrypoint.sh
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 
 EXPOSE 8501
 

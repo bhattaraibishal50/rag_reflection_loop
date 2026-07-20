@@ -1,6 +1,6 @@
 """Vector search over the Chroma index. Shared by System A and System B.
 
-Quick GATE check:  python -m src.retrieval.retriever "early blight concentric rings tomato"
+Quick GATE check:  python cli.py retrieve "early blight concentric rings tomato"
 Inspect the returned passages — are they actually relevant? If not, fix chunking/embeddings
 before building agents.
 """
@@ -16,7 +16,13 @@ from config.config import cfg
 class Retriever:
     def __init__(self):
         client = chromadb.PersistentClient(path=str(cfg.chroma_dir))
-        self.collection = client.get_collection(cfg.collection_name)
+        try:
+            self.collection = client.get_collection(cfg.collection_name)
+        except Exception as exc:  # noqa: BLE001 — chroma raises if the collection is absent
+            raise RuntimeError(
+                f"No Chroma collection '{cfg.collection_name}' at {cfg.chroma_dir}. "
+                "Build the index first:  python cli.py ingest"
+            ) from exc
 
     def search(self, query: str, top_k: int | None = None) -> list[dict]:
         from src.llm.embeddings import embed_query

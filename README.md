@@ -33,6 +33,8 @@ effect of reflection (see "Confounds" in the proposal).
 
 ```
 .
+├── cli.py                  # ← single entry point for every step
+├── Makefile                # ← friendly shortcuts (make ingest, make benchmark, …)
 ├── config/                 # central configuration (models, paths, loop cap)
 ├── data/
 │   ├── images/             # 100 adversarial test images
@@ -40,14 +42,15 @@ effect of reflection (see "Confounds" in the proposal).
 │   └── knowledge_base/     # FAO / agronomy PDFs for the RAG corpus
 ├── prompts/                # Actor, Critic system prompts + judge rubric
 ├── src/
-│   ├── ingest/             # PDF → chunk → embed → Chroma
-│   ├── retrieval/          # vector search wrapper
-│   ├── llm/                # model client (swappable)
-│   ├── system_a_baseline.py
-│   ├── system_b_reflection/   # LangGraph Actor–Critic graph
-│   └── app/                # FastAPI + Streamlit demo
+│   ├── llm/                # Gemini client + embeddings (via LangChain, swappable)
+│   ├── rag/                # ingest.py · retriever.py · prepare_ground_truth.py
+│   ├── systems/
+│   │   ├── baseline.py     # System A — single-pass RAG
+│   │   └── reflection/     # System B — LangGraph Actor–Critic loop
+│   └── app/                # Streamlit demo
 ├── eval/
-│   ├── run_benchmark.py    # run all cases through A and B
+│   ├── preflight.py        # readiness gate before a paid run
+│   ├── run_benchmark.py    # run all cases through A and B + paired stats
 │   ├── metrics.py          # hallucination rate, faithfulness, latency
 │   └── judge_validation.py # Cohen's kappa: LLM judge vs humans
 └── notebooks/
@@ -64,12 +67,12 @@ cp .env.example .env          # add your GEMINI_API_KEY
 docker compose up app         # demo at http://localhost:8501, auto-reloads on edits
 ```
 
-Run the pipeline steps in the same image:
+Run the pipeline steps in the same image (prefix any `cli.py` command):
 
 ```bash
-docker compose run --rm app python -m src.ingest.ingest
-docker compose run --rm app python -m src.retrieval.retriever "early blight tomato"
-docker compose run --rm app python -m eval.run_benchmark
+docker compose run --rm app python cli.py ingest
+docker compose run --rm app python cli.py benchmark
+# or:  make ingest PY="docker compose run --rm app python"
 ```
 
 The project is bind-mounted into the container, so any source edit on the host
@@ -84,20 +87,28 @@ pip install -r requirements.txt
 cp .env.example .env          # then add your GEMINI_API_KEY
 ```
 
+## Usage — one command surface
+
+Every step runs through `cli.py` (or the matching `make` target):
+
+```bash
+python cli.py --help            # list all commands
+python cli.py <command> [args]
+```
+
 ## Build order (validate each step before the next)
 
-1. Add images + fill `data/ground_truth.csv`; drop PDFs in `data/knowledge_base/`.
-   - Have a class-folder dataset (PlantVillage/Tomato)? Scaffold the CSV automatically:
-     `python -m src.ingest.prepare_ground_truth /path/to/dataset --per-class 20`
-     then hand-edit to keep ambiguous pairs + add cross-domain `REJECT` rows.
-2. `python -m src.ingest.ingest`            → build the Chroma index.
-3. `python -m src.retrieval.retriever "test query"`  → **GATE: confirm good passages.**
-4. `python -m eval.preflight`               → **GATE: key + KB + index + images all ready.**
-5. `python -m src.system_a_baseline <image>` → baseline runs end-to-end.
-6. `python -m src.system_b_reflection.graph <image>` → loop runs and reflects.
-7. `python -m eval.judge_validation`         → **GATE: Cohen's kappa ≥ 0.6.**
-8. `python -m eval.run_benchmark`            → full results + paired McNemar / bootstrap CIs.
-9. `streamlit run src/app/app.py`            → demo.
+| Step | Command | Make | Gate |
+|---|---|---|---|
+| 0. Scaffold labels from a dataset folder | `python cli.py prepare-data <dataset>` | `make prepare DATASET=…` | |
+| 1. Add PDFs to `data/knowledge_base/`, finish `ground_truth.csv` | — | — | |
+| 2. Build the index | `python cli.py ingest` | `make ingest` | |
+| 3. Inspect retrieval | `python cli.py retrieve "query"` | `make retrieve Q=…` | **confirm good passages** |
+| 4. Readiness check | `python cli.py check` | `make check` | **key + KB + index + images** |
+| 5. One diagnosis | `python cli.py diagnose <img> --system a\|b` | `make diagnose IMG=… SYS=b` | |
+| 6. Validate the judge | `python cli.py validate-judge` | `make validate` | **Cohen's κ ≥ 0.6** |
+| 7. Full benchmark | `python cli.py benchmark` | `make benchmark` | |
+| 8. Demo | `python cli.py demo` | `make demo` / `make up` | |
 
 ## Status
 

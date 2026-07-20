@@ -3,7 +3,7 @@
     ACTOR -> CRITIC -> [discrepancy & under cap?] --yes--> ACTOR (refine)
                                                   --no---> END
 
-Run:  python -m src.system_b_reflection.graph data/images/tomato_earlyblight_001.jpg
+Run:  python cli.py diagnose data/images/tomato_earlyblight_001.jpg --system b
 """
 from __future__ import annotations
 
@@ -13,9 +13,9 @@ import time
 from langgraph.graph import END, StateGraph
 
 from config.config import cfg
-from src.system_b_reflection.actor import actor_node
-from src.system_b_reflection.critic import critic_node
-from src.system_b_reflection.state import ReflectionState
+from src.systems.reflection.actor import actor_node
+from src.systems.reflection.critic import critic_node
+from src.systems.reflection.state import ReflectionState
 
 
 def _should_continue(state: ReflectionState) -> str:

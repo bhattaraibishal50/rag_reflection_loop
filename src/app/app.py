@@ -7,12 +7,20 @@ and a corrected reflection-loop answer.
 """
 from __future__ import annotations
 
+import sys
 import tempfile
+from pathlib import Path
 
 import streamlit as st
 
-from src import system_a_baseline
-from src.system_b_reflection import graph as system_b
+# Streamlit executes this file as a script, so the repo root is NOT on sys.path
+# (only src/app/ is). Add it so `import src...` resolves — works in Docker and locally.
+_ROOT = Path(__file__).resolve().parents[2]
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
+
+from src.systems import baseline as system_a_baseline  # noqa: E402
+from src.systems.reflection import graph as system_b  # noqa: E402
 
 st.set_page_config(page_title="Crop Reflection RAG", layout="wide")
 st.title("🌿 Crop Diagnostics — Baseline vs Reflection Loop")

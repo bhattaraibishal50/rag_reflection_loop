@@ -1,6 +1,6 @@
 """Step 2 of the build: PDF knowledge base -> chunks -> embeddings -> Chroma.
 
-Run:  python -m src.ingest.ingest
+Run:  python cli.py ingest
 
 GATE: after this, run the retriever and confirm it returns the RIGHT passages
 before building any agents (bad retrieval poisons both systems — concern #3).

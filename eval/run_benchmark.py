@@ -3,7 +3,7 @@
 Each case is run cfg.runs_per_case times (non-determinism — concern #7); report mean ± std.
 Output: eval/results/benchmark_raw.csv and a printed summary with paired significance tests.
 
-Run:  python -m eval.run_benchmark
+Run:  python cli.py benchmark
 """
 from __future__ import annotations
 
@@ -12,8 +12,8 @@ import pandas as pd
 
 from config.config import cfg
 from eval.metrics import faithfulness_score, hallucination_rate, rejection_correct
-from src import system_a_baseline
-from src.system_b_reflection import graph as system_b
+from src.systems import baseline as system_a_baseline
+from src.systems.reflection import graph as system_b
 
 
 def _default_query(row) -> str:

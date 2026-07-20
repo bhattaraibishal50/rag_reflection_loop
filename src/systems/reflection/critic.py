@@ -6,7 +6,7 @@ import json
 
 from config.config import cfg
 from src.llm.client import LLMClient, load_prompt
-from src.system_b_reflection.state import ReflectionState
+from src.systems.reflection.state import ReflectionState
 
 # NOTE: for the final run, consider a DIFFERENT model family here to reduce self-bias.
 _critic = LLMClient(cfg.critic_model, temperature=cfg.critic_temperature)

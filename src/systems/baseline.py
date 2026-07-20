@@ -2,7 +2,7 @@
 
 retrieve -> diagnose. One model call. No self-check.
 
-Run:  python -m src.system_a_baseline data/images/tomato_earlyblight_001.jpg
+Run:  python cli.py diagnose data/images/tomato_earlyblight_001.jpg --system a
 """
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ import time
 
 from config.config import cfg
 from src.llm.client import LLMClient, load_prompt
-from src.retrieval.retriever import Retriever
+from src.rag.retriever import Retriever
 
 
 def diagnose(image_path: str, query: str = "What disease does this plant have?") -> dict:
