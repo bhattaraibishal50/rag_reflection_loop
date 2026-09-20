@@ -20,15 +20,25 @@ _SOURCES: list[tuple[str, str]] = [
     ("wisc_tomato_early_blight_septoria.pdf",
      "https://barron.extension.wisc.edu/files/2023/02/Tomato-Disorder-Early-Blight-and-Septoria-Leaf-Spot.pdf"),
     # --- Broad tomato disease guides ---
-    ("msu_e3170_tomato_diseases.pdf",
-     "https://www.canr.msu.edu/home_gardening/uploads/files/E3170_Tomato_Diseases_June-2025_AA.pdf"),
-    ("ut_sp277w_foliar_diseases_of_tomato.pdf",
-     "https://utia.tennessee.edu/publications/wp-content/uploads/sites/269/2023/10/SP277-W.pdf"),
+    # NOTE (2026-09-20): three original sources went dead and were replaced with
+    # verified-live equivalents (all checked HTTP 200 + %PDF magic on that date):
+    #   - msu_e3170_tomato_diseases.pdf      -> 200 but HTML bot-wall, not a PDF
+    #   - ut_sp277w_foliar_diseases_of_tomato -> 404
+    #   - umass_late_blight_management.pdf    -> 403 Forbidden
+    # PPFS-VG-25 is the most valuable replacement: it treats Early Blight,
+    # Septoria Leaf Spot and Target Spot together, which is exactly the
+    # confusable triad the ambiguous cases are built from.
+    ("uky_ppfs_vg25_foliar_diseases_of_tomato.pdf",
+     "https://plantpathology.mgcafe.uky.edu/sites/plantpathology.ca.uky.edu/files/PPFS-VG-25.pdf"),
+    ("uky_ppfs_vg38_tomato_blight_leaf_diseases.pdf",
+     "https://plantpathology.ca.uky.edu/files/PPFS-VG-38.pdf"),
+    ("kstate_l721_tomato_leaf_and_fruit_diseases.pdf",
+     "https://bookstore.ksre.ksu.edu/pubs/tomato-leaf-and-fruit-diseases-and-disorders_L721.pdf"),
     # --- Late blight (tomato & potato) ---
     ("wisc_tomato_late_blight.pdf",
      "https://barron.extension.wisc.edu/files/2023/02/Tomato-Late-Blight.pdf"),
-    ("umass_late_blight_tomato_potato.pdf",
-     "https://www.umass.edu/agriculture-food-environment/sites/ag.umass.edu/files/fact-sheets/pdf/late_blight_management.pdf"),
+    ("unl_ec1864_tomato_disease_management.pdf",
+     "https://extensionpubs.unl.edu/publication/ec1864/2011/pdf/view/ec1864-2011.pdf"),
     ("purdue_bp80w_late_blight_tomato_potato.pdf",
      "https://www.extension.purdue.edu/extmedia/bp/bp-80-w.pdf"),
     # --- Potato ---
