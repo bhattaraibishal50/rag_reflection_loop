@@ -1,6 +1,107 @@
+# Curated benchmark case set — 100 cases. Generated deterministically by
+# src/rag/curate_ground_truth.py (SEED=20260920). Do not hand-edit; re-run instead.
+# case_type=ambiguous (80): visually confusable foliar diseases.
+# case_type=cross_domain (20): image of crop X + query about crop Y,
+#   true_label=REJECT. For THESE rows `notes` is the literal query text
+#   (run_benchmark._default_query uses it verbatim). 20/100 = 20% adversarial.
 image_filename,true_label,crop,case_type,notes
-# case_type: "ambiguous" (visually similar diseases) or "cross_domain" (out-of-scope, RQ3)
-# For cross_domain rows, true_label should be "REJECT" — the correct answer is to refuse.
-tomato_earlyblight_001.jpg,Early Blight,tomato,ambiguous,looks similar to Septoria
-tomato_septoria_001.jpg,Septoria Leaf Spot,tomato,ambiguous,looks similar to Early Blight
-potato_image_with_corn_query_001.jpg,REJECT,potato,cross_domain,query asks about corn disease
+tomato___early_blight_037.jpg,Early Blight,tomato,ambiguous,core triad: concentric target rings + chlorotic halo; confused with Septoria/Late Blight
+tomato___early_blight_040.jpg,Early Blight,tomato,ambiguous,core triad: concentric target rings + chlorotic halo; confused with Septoria/Late Blight
+tomato___early_blight_045.jpg,Early Blight,tomato,ambiguous,core triad: concentric target rings + chlorotic halo; confused with Septoria/Late Blight
+tomato___early_blight_017.jpg,Early Blight,tomato,ambiguous,core triad: concentric target rings + chlorotic halo; confused with Septoria/Late Blight
+tomato___early_blight_008.jpg,Early Blight,tomato,ambiguous,core triad: concentric target rings + chlorotic halo; confused with Septoria/Late Blight
+tomato___early_blight_028.jpg,Early Blight,tomato,ambiguous,core triad: concentric target rings + chlorotic halo; confused with Septoria/Late Blight
+tomato___early_blight_026.jpg,Early Blight,tomato,ambiguous,core triad: concentric target rings + chlorotic halo; confused with Septoria/Late Blight
+tomato___early_blight_022.jpg,Early Blight,tomato,ambiguous,core triad: concentric target rings + chlorotic halo; confused with Septoria/Late Blight
+tomato___early_blight_015.jpg,Early Blight,tomato,ambiguous,core triad: concentric target rings + chlorotic halo; confused with Septoria/Late Blight
+tomato___early_blight_044.jpg,Early Blight,tomato,ambiguous,core triad: concentric target rings + chlorotic halo; confused with Septoria/Late Blight
+tomato___early_blight_042.jpg,Early Blight,tomato,ambiguous,core triad: concentric target rings + chlorotic halo; confused with Septoria/Late Blight
+tomato___early_blight_001.jpg,Early Blight,tomato,ambiguous,core triad: concentric target rings + chlorotic halo; confused with Septoria/Late Blight
+tomato___early_blight_047.jpg,Early Blight,tomato,ambiguous,core triad: concentric target rings + chlorotic halo; confused with Septoria/Late Blight
+tomato___early_blight_018.jpg,Early Blight,tomato,ambiguous,core triad: concentric target rings + chlorotic halo; confused with Septoria/Late Blight
+tomato___septoria_leaf_spot_032.jpg,Septoria Leaf Spot,tomato,ambiguous,"core triad: small circular tan lesions, dark margins, black pycnidia; confused with Early Blight"
+tomato___septoria_leaf_spot_030.jpg,Septoria Leaf Spot,tomato,ambiguous,"core triad: small circular tan lesions, dark margins, black pycnidia; confused with Early Blight"
+tomato___septoria_leaf_spot_025.jpg,Septoria Leaf Spot,tomato,ambiguous,"core triad: small circular tan lesions, dark margins, black pycnidia; confused with Early Blight"
+tomato___septoria_leaf_spot_007.jpg,Septoria Leaf Spot,tomato,ambiguous,"core triad: small circular tan lesions, dark margins, black pycnidia; confused with Early Blight"
+tomato___septoria_leaf_spot_004.jpg,Septoria Leaf Spot,tomato,ambiguous,"core triad: small circular tan lesions, dark margins, black pycnidia; confused with Early Blight"
+tomato___septoria_leaf_spot_012.jpg,Septoria Leaf Spot,tomato,ambiguous,"core triad: small circular tan lesions, dark margins, black pycnidia; confused with Early Blight"
+tomato___septoria_leaf_spot_016.jpg,Septoria Leaf Spot,tomato,ambiguous,"core triad: small circular tan lesions, dark margins, black pycnidia; confused with Early Blight"
+tomato___septoria_leaf_spot_027.jpg,Septoria Leaf Spot,tomato,ambiguous,"core triad: small circular tan lesions, dark margins, black pycnidia; confused with Early Blight"
+tomato___septoria_leaf_spot_011.jpg,Septoria Leaf Spot,tomato,ambiguous,"core triad: small circular tan lesions, dark margins, black pycnidia; confused with Early Blight"
+tomato___septoria_leaf_spot_024.jpg,Septoria Leaf Spot,tomato,ambiguous,"core triad: small circular tan lesions, dark margins, black pycnidia; confused with Early Blight"
+tomato___septoria_leaf_spot_031.jpg,Septoria Leaf Spot,tomato,ambiguous,"core triad: small circular tan lesions, dark margins, black pycnidia; confused with Early Blight"
+tomato___septoria_leaf_spot_048.jpg,Septoria Leaf Spot,tomato,ambiguous,"core triad: small circular tan lesions, dark margins, black pycnidia; confused with Early Blight"
+tomato___septoria_leaf_spot_035.jpg,Septoria Leaf Spot,tomato,ambiguous,"core triad: small circular tan lesions, dark margins, black pycnidia; confused with Early Blight"
+tomato___septoria_leaf_spot_014.jpg,Septoria Leaf Spot,tomato,ambiguous,"core triad: small circular tan lesions, dark margins, black pycnidia; confused with Early Blight"
+tomato___late_blight_020.jpg,Late Blight,tomato,ambiguous,"core triad: irregular greasy water-soaked lesions, pale sporulating margin; confused with Early Blight"
+tomato___late_blight_044.jpg,Late Blight,tomato,ambiguous,"core triad: irregular greasy water-soaked lesions, pale sporulating margin; confused with Early Blight"
+tomato___late_blight_041.jpg,Late Blight,tomato,ambiguous,"core triad: irregular greasy water-soaked lesions, pale sporulating margin; confused with Early Blight"
+tomato___late_blight_033.jpg,Late Blight,tomato,ambiguous,"core triad: irregular greasy water-soaked lesions, pale sporulating margin; confused with Early Blight"
+tomato___late_blight_031.jpg,Late Blight,tomato,ambiguous,"core triad: irregular greasy water-soaked lesions, pale sporulating margin; confused with Early Blight"
+tomato___late_blight_022.jpg,Late Blight,tomato,ambiguous,"core triad: irregular greasy water-soaked lesions, pale sporulating margin; confused with Early Blight"
+tomato___late_blight_029.jpg,Late Blight,tomato,ambiguous,"core triad: irregular greasy water-soaked lesions, pale sporulating margin; confused with Early Blight"
+tomato___late_blight_014.jpg,Late Blight,tomato,ambiguous,"core triad: irregular greasy water-soaked lesions, pale sporulating margin; confused with Early Blight"
+tomato___late_blight_035.jpg,Late Blight,tomato,ambiguous,"core triad: irregular greasy water-soaked lesions, pale sporulating margin; confused with Early Blight"
+tomato___late_blight_026.jpg,Late Blight,tomato,ambiguous,"core triad: irregular greasy water-soaked lesions, pale sporulating margin; confused with Early Blight"
+tomato___late_blight_039.jpg,Late Blight,tomato,ambiguous,"core triad: irregular greasy water-soaked lesions, pale sporulating margin; confused with Early Blight"
+tomato___late_blight_013.jpg,Late Blight,tomato,ambiguous,"core triad: irregular greasy water-soaked lesions, pale sporulating margin; confused with Early Blight"
+tomato___target_spot_002.jpg,Target Spot,tomato,ambiguous,small lesions with concentric zonation; easily read as Early Blight
+tomato___target_spot_009.jpg,Target Spot,tomato,ambiguous,small lesions with concentric zonation; easily read as Early Blight
+tomato___target_spot_022.jpg,Target Spot,tomato,ambiguous,small lesions with concentric zonation; easily read as Early Blight
+tomato___target_spot_028.jpg,Target Spot,tomato,ambiguous,small lesions with concentric zonation; easily read as Early Blight
+tomato___target_spot_036.jpg,Target Spot,tomato,ambiguous,small lesions with concentric zonation; easily read as Early Blight
+tomato___target_spot_043.jpg,Target Spot,tomato,ambiguous,small lesions with concentric zonation; easily read as Early Blight
+tomato___target_spot_034.jpg,Target Spot,tomato,ambiguous,small lesions with concentric zonation; easily read as Early Blight
+tomato___target_spot_038.jpg,Target Spot,tomato,ambiguous,small lesions with concentric zonation; easily read as Early Blight
+tomato___target_spot_004.jpg,Target Spot,tomato,ambiguous,small lesions with concentric zonation; easily read as Early Blight
+tomato___target_spot_019.jpg,Target Spot,tomato,ambiguous,small lesions with concentric zonation; easily read as Early Blight
+tomato___bacterial_spot_017.jpg,Bacterial Spot,tomato,ambiguous,small dark water-soaked spots; easily read as Septoria Leaf Spot
+tomato___bacterial_spot_011.jpg,Bacterial Spot,tomato,ambiguous,small dark water-soaked spots; easily read as Septoria Leaf Spot
+tomato___bacterial_spot_012.jpg,Bacterial Spot,tomato,ambiguous,small dark water-soaked spots; easily read as Septoria Leaf Spot
+tomato___bacterial_spot_014.jpg,Bacterial Spot,tomato,ambiguous,small dark water-soaked spots; easily read as Septoria Leaf Spot
+tomato___bacterial_spot_018.jpg,Bacterial Spot,tomato,ambiguous,small dark water-soaked spots; easily read as Septoria Leaf Spot
+tomato___bacterial_spot_047.jpg,Bacterial Spot,tomato,ambiguous,small dark water-soaked spots; easily read as Septoria Leaf Spot
+tomato___bacterial_spot_043.jpg,Bacterial Spot,tomato,ambiguous,small dark water-soaked spots; easily read as Septoria Leaf Spot
+tomato___bacterial_spot_015.jpg,Bacterial Spot,tomato,ambiguous,small dark water-soaked spots; easily read as Septoria Leaf Spot
+tomato___bacterial_spot_005.jpg,Bacterial Spot,tomato,ambiguous,small dark water-soaked spots; easily read as Septoria Leaf Spot
+tomato___bacterial_spot_046.jpg,Bacterial Spot,tomato,ambiguous,small dark water-soaked spots; easily read as Septoria Leaf Spot
+tomato___leaf_mold_042.jpg,Leaf Mold,tomato,ambiguous,pale upper-surface patches + olive lower-surface sporulation; confused with early-stage spotting
+tomato___leaf_mold_033.jpg,Leaf Mold,tomato,ambiguous,pale upper-surface patches + olive lower-surface sporulation; confused with early-stage spotting
+tomato___leaf_mold_017.jpg,Leaf Mold,tomato,ambiguous,pale upper-surface patches + olive lower-surface sporulation; confused with early-stage spotting
+tomato___leaf_mold_002.jpg,Leaf Mold,tomato,ambiguous,pale upper-surface patches + olive lower-surface sporulation; confused with early-stage spotting
+tomato___leaf_mold_044.jpg,Leaf Mold,tomato,ambiguous,pale upper-surface patches + olive lower-surface sporulation; confused with early-stage spotting
+tomato___leaf_mold_045.jpg,Leaf Mold,tomato,ambiguous,pale upper-surface patches + olive lower-surface sporulation; confused with early-stage spotting
+potato___early_blight_004.jpg,Early Blight,potato,ambiguous,cross-crop replication of the Early-vs-Late Blight confusion
+potato___early_blight_031.jpg,Early Blight,potato,ambiguous,cross-crop replication of the Early-vs-Late Blight confusion
+potato___early_blight_000.jpg,Early Blight,potato,ambiguous,cross-crop replication of the Early-vs-Late Blight confusion
+potato___early_blight_030.jpg,Early Blight,potato,ambiguous,cross-crop replication of the Early-vs-Late Blight confusion
+potato___early_blight_017.jpg,Early Blight,potato,ambiguous,cross-crop replication of the Early-vs-Late Blight confusion
+potato___early_blight_027.jpg,Early Blight,potato,ambiguous,cross-crop replication of the Early-vs-Late Blight confusion
+potato___early_blight_028.jpg,Early Blight,potato,ambiguous,cross-crop replication of the Early-vs-Late Blight confusion
+potato___late_blight_043.jpg,Late Blight,potato,ambiguous,cross-crop replication of the Early-vs-Late Blight confusion
+potato___late_blight_005.jpg,Late Blight,potato,ambiguous,cross-crop replication of the Early-vs-Late Blight confusion
+potato___late_blight_036.jpg,Late Blight,potato,ambiguous,cross-crop replication of the Early-vs-Late Blight confusion
+potato___late_blight_049.jpg,Late Blight,potato,ambiguous,cross-crop replication of the Early-vs-Late Blight confusion
+potato___late_blight_028.jpg,Late Blight,potato,ambiguous,cross-crop replication of the Early-vs-Late Blight confusion
+potato___late_blight_035.jpg,Late Blight,potato,ambiguous,cross-crop replication of the Early-vs-Late Blight confusion
+potato___late_blight_024.jpg,Late Blight,potato,ambiguous,cross-crop replication of the Early-vs-Late Blight confusion
+corn___common_rust_018.jpg,REJECT,corn,cross_domain,"My tomato plants have these lesions spreading on the lower leaves. Is this tomato early blight or septoria leaf spot, and what should I spray?"
+corn___common_rust_040.jpg,REJECT,corn,cross_domain,"My tomato plants have these lesions spreading on the lower leaves. Is this tomato early blight or septoria leaf spot, and what should I spray?"
+corn___common_rust_036.jpg,REJECT,corn,cross_domain,"My tomato plants have these lesions spreading on the lower leaves. Is this tomato early blight or septoria leaf spot, and what should I spray?"
+corn___common_rust_013.jpg,REJECT,corn,cross_domain,"My tomato plants have these lesions spreading on the lower leaves. Is this tomato early blight or septoria leaf spot, and what should I spray?"
+corn___common_rust_032.jpg,REJECT,corn,cross_domain,What disease affects this potato crop? I am worried it is potato late blight and I need to decide about fungicide today.
+corn___common_rust_049.jpg,REJECT,corn,cross_domain,What disease affects this potato crop? I am worried it is potato late blight and I need to decide about fungicide today.
+corn___common_rust_004.jpg,REJECT,corn,cross_domain,What disease affects this potato crop? I am worried it is potato late blight and I need to decide about fungicide today.
+corn___common_rust_021.jpg,REJECT,corn,cross_domain,What disease affects this potato crop? I am worried it is potato late blight and I need to decide about fungicide today.
+grape___black_rot_046.jpg,REJECT,grape,cross_domain,Please diagnose the disease on my tomato plant and tell me the treatment for it.
+grape___black_rot_001.jpg,REJECT,grape,cross_domain,Please diagnose the disease on my tomato plant and tell me the treatment for it.
+grape___black_rot_049.jpg,REJECT,grape,cross_domain,Please diagnose the disease on my tomato plant and tell me the treatment for it.
+grape___black_rot_010.jpg,REJECT,grape,cross_domain,Please diagnose the disease on my tomato plant and tell me the treatment for it.
+grape___black_rot_032.jpg,REJECT,grape,cross_domain,My potatoes look diseased. Is this potato early blight? What fungicide do you recommend?
+grape___black_rot_013.jpg,REJECT,grape,cross_domain,My potatoes look diseased. Is this potato early blight? What fungicide do you recommend?
+grape___black_rot_033.jpg,REJECT,grape,cross_domain,My potatoes look diseased. Is this potato early blight? What fungicide do you recommend?
+tomato___early_blight_025.jpg,REJECT,tomato,cross_domain,"My corn has these pustules on the leaves. Is this corn common rust, and how do I treat it?"
+tomato___early_blight_036.jpg,REJECT,tomato,cross_domain,"My corn has these pustules on the leaves. Is this corn common rust, and how do I treat it?"
+tomato___septoria_leaf_spot_005.jpg,REJECT,tomato,cross_domain,"What disease is affecting my wheat crop here, and what is the recommended fungicide?"
+potato___late_blight_045.jpg,REJECT,potato,cross_domain,Is this grape black rot on my grapevine? Tell me how to manage it.
+potato___early_blight_022.jpg,REJECT,potato,cross_domain,My rice paddy looks damaged. What rice disease is this and what should I apply?
