@@ -21,7 +21,7 @@ import time
 import pandas as pd
 
 from config.config import cfg
-from eval.metrics import faithfulness_score, hallucination_rate
+from eval.metrics import faithfulness_score, hallucination_rate, rejection_correct
 from src.llm import client as llm_client
 from src.systems import baseline as system_a
 from src.systems.reflection import graph as system_b
@@ -120,6 +120,7 @@ def run_pilot(n_cases: int = 8) -> dict:
                 "total_s": round(t_diag + t_judge + t_faith, 2),
                 "hallucination_rate": hr.get("hallucination_rate"),
                 "n_claims": len(hr.get("claims", [])),
+                "rejection_correct": rejection_correct(res["diagnosis"], case["true_label"]),
                 "faithfulness": faith, "faithfulness_error": faith_err,
                 "diagnosis_head": str(res["diagnosis"])[:120].replace("\n", " "),
             })
@@ -168,6 +169,13 @@ def run_pilot(n_cases: int = 8) -> dict:
           .mean().round(2).to_string())
     print("\n=== ITERATIONS (System B reflection loop) ===")
     print(df[df.system == "B_reflection"]["iterations"].describe().round(2).to_string())
+    print("\n=== FAITHFULNESS (must be non-null; 0/16 here means RAGAS is broken) ===")
+    print(f"  non-null: {df['faithfulness'].notna().sum()}/{len(df)}")
+    print(df.groupby("system")["faithfulness"].mean().round(3).to_string())
+    print("\n=== RQ3 pilot rejection accuracy (cross_domain only) ===")
+    cd = df[df.case_type == "cross_domain"]
+    if not cd.empty:
+        print(cd.groupby("system")["rejection_correct"].mean().round(3).to_string())
     print("\n=== PROJECTION TO FULL RUN ===")
     for k, v in projection.items():
         print(f"  {k}: {v}")

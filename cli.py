@@ -11,6 +11,7 @@ Commands (in the order you'd normally run them):
     retrieve "<query>"       GATE: inspect retrieved passages
     check                    GATE: verify key + KB + index + images are ready
     diagnose <image>         run one diagnosis (--system a|b)
+    pilot [n]                COST GATE: small run; measures tokens/latency, projects full cost
     make-validation-subset   run a subset + judge labels for judge validation
     validate-judge           GATE: Cohen's kappa of the LLM judge vs humans (>= 0.6)
     benchmark                run all cases through A and B; print stats
@@ -72,6 +73,11 @@ def _cmd_diagnose(args: argparse.Namespace) -> None:
     print(f"\n[{tail}]")
 
 
+def _cmd_pilot(args: argparse.Namespace) -> None:
+    from eval.pilot import run_pilot
+    run_pilot(args.cases)
+
+
 def _cmd_make_validation_subset(args: argparse.Namespace) -> None:
     from eval.make_validation_subset import make_subset
     make_subset(args.cases)
@@ -129,6 +135,12 @@ def build_parser() -> argparse.ArgumentParser:
                     help="a = single-pass baseline, b = reflection loop (default)")
     sp.add_argument("--query", default="What disease does this plant have?")
     sp.set_defaults(func=_cmd_diagnose)
+
+    sp = sub.add_parser("pilot",
+                        help="COST GATE: small run; measure tokens/latency, project full cost")
+    sp.add_argument("cases", nargs="?", type=int, default=8,
+                    help="number of cases to pilot (default 8)")
+    sp.set_defaults(func=_cmd_pilot)
 
     sp = sub.add_parser("make-validation-subset",
                         help="generate the subset + judge labels for judge validation")
