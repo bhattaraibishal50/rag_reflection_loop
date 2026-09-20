@@ -83,14 +83,54 @@ def run(workers: int = 1) -> pd.DataFrame:
     warm_retriever()
 
     gt = pd.read_csv(cfg.ground_truth_csv, comment="#")
+
+    # --- RESUME ---------------------------------------------------------------
+    # A (image, run) pair counts as done only when BOTH systems are present: the
+    # analysis pairs on that key, so a half-finished pair is useless. Completed
+    # rows are carried forward and merged with the new ones.
+    done_keys: set = set()
+    prior_rows: list[dict] = []
+    out_csv = cfg.results_dir / "benchmark_raw.csv"
+    if out_csv.exists():
+        prev = pd.read_csv(out_csv)
+        if not prev.empty:
+            counts = prev.groupby(["image", "run"])["system"].nunique()
+            done_keys = {k for k, v in counts.items() if v >= 2}
+            keep = prev.set_index(["image", "run"]).index.isin(list(done_keys))
+            prior_rows = prev[keep].to_dict("records")
+            print(f"RESUME: {len(done_keys)} complete (image, run) pairs found; "
+                  f"carrying {len(prior_rows)} rows forward")
+
     units = [(case, run_i)
              for _, case in gt.iterrows()
-             for run_i in range(cfg.runs_per_case)]
-    total = len(units)
-    print(f"BENCHMARK: {len(gt)} cases x {cfg.runs_per_case} runs x 2 systems "
-          f"= {total * 2} diagnoses  (workers={workers})")
+             for run_i in range(cfg.runs_per_case)
+             if (case["image_filename"], run_i) not in done_keys]
 
-    rows: list[dict] = []
+    # --- PRIORITY ORDER -------------------------------------------------------
+    # cross_domain first (RQ3 has no data at all and is the most fragile result),
+    # then non-tomato crops (cross-crop generality), then the rest. If the budget
+    # runs out again, what is lost is additional tomato/ambiguous data we already
+    # have plenty of, rather than a research question.
+    def _priority(u):
+        case, _ = u
+        if case["case_type"] == "cross_domain":
+            return 0
+        return 1 if case["crop"] != "tomato" else 2
+
+    units.sort(key=_priority)
+    if units:
+        from collections import Counter
+        print("ORDER:", dict(Counter(
+            "cross_domain" if c["case_type"] == "cross_domain"
+            else ("non-tomato" if c["crop"] != "tomato" else "tomato-ambiguous")
+            for c, _ in units)))
+    total = len(units)
+    print(f"BENCHMARK: {len(gt)} cases x {cfg.runs_per_case} runs x 2 systems; "
+          f"{total} units remaining = {total * 2} diagnoses  (workers={workers})")
+    if total == 0:
+        print("Nothing to do — all units already complete.")
+
+    rows: list[dict] = list(prior_rows)
     done = 0
     t0 = time.perf_counter()
 
@@ -129,6 +169,11 @@ def run(workers: int = 1) -> pd.DataFrame:
         df = df.sort_values(["image", "run", "system"]).reset_index(drop=True)
     cfg.results_dir.mkdir(parents=True, exist_ok=True)
     df.to_csv(cfg.results_dir / "benchmark_raw.csv", index=False)
+    try:
+        from src.llm.embeddings import cache_stats
+        print("embedding cache:", cache_stats())
+    except Exception:
+        pass
     print(f"\nWrote {cfg.results_dir / 'benchmark_raw.csv'} "
           f"({len(df)} rows, {time.perf_counter() - t0:.0f}s)")
     return df

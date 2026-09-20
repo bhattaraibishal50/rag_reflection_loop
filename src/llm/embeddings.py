@@ -6,6 +6,8 @@ GoogleGenerativeAIEmbeddings instances — the asymmetry improves retrieval qual
 recommended by Google.
 """
 from __future__ import annotations
+
+import threading
 from config.config import cfg
 from src.llm.client import with_retry
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
@@ -50,3 +52,34 @@ def embed_query(text: str) -> list[float]:
     if _query_embedder is None:
         _query_embedder = _make_embedder("retrieval_query")
     return with_retry(lambda: _query_embedder.embed_query(text))
+
+
+# --- Query-embedding cache ---------------------------------------------------
+# 185 of 187 unit failures in the 2026-09-20 run were embedding 429s. Benchmark
+# queries repeat heavily ("What disease affects this tomato?" across dozens of
+# cases), and embedContent is deterministic for a fixed model+task_type, so
+# memoising by exact query string is scientifically neutral: identical input,
+# identical vector. Cuts both cost and the dominant failure surface.
+_QUERY_CACHE: dict[str, list[float]] = {}
+_QUERY_CACHE_LOCK = threading.Lock()
+_CACHE_STATS = {"hits": 0, "misses": 0}
+
+_uncached_embed_query = embed_query
+
+
+def embed_query(text: str):  # type: ignore[no-redef]
+    with _QUERY_CACHE_LOCK:
+        hit = _QUERY_CACHE.get(text)
+        if hit is not None:
+            _CACHE_STATS["hits"] += 1
+            return hit
+    vec = _uncached_embed_query(text)
+    with _QUERY_CACHE_LOCK:
+        _QUERY_CACHE[text] = vec
+        _CACHE_STATS["misses"] += 1
+    return vec
+
+
+def cache_stats() -> dict:
+    with _QUERY_CACHE_LOCK:
+        return dict(_CACHE_STATS)
