@@ -40,7 +40,7 @@ Finally, I thank my family and friends for their unwavering support and encourag
 
 The integration of Multimodal Large Language Models (MLLMs) with Retrieval-Augmented Generation (RAG) offers a promising approach to digital agricultural diagnostics. However, such systems frequently suffer from *modality-misalignment hallucinations*, in which the model prioritises its internal parametric memory or retrieved text over conflicting visual evidence in a user-supplied image. In the high-stakes domain of crop pathology, such errors lead to incorrect treatment recommendations and avoidable yield loss.
 
-This research investigates whether an autonomous multi-agent reflection loop reduces hallucinations relative to a standard single-pass pipeline. Two diagnostic systems are benchmarked on the same data: (A) a single-pass RAG baseline, and (B) a stateful Actor–Critic reflection loop implemented in LangGraph, in which a dedicated Critic agent cross-references the image against the retrieved agronomic text before a diagnosis is finalised. The evaluation uses 100 adversarial cases drawn from the PlantVillage repository and a 2025 Tomato Leaf Dataset — targeting diseases of high visual similarity but divergent treatment — together with a 20% subset of cross-domain queries testing contextual rejection. Performance is measured by Hallucination Rate, Faithfulness Score, inference latency, and rejection accuracy, using an LLM-as-judge that is itself validated against human annotators (Cohen's κ ≥ 0.60) before use.
+This research investigates whether an autonomous multi-agent reflection loop reduces hallucinations relative to a standard single-pass pipeline. Two diagnostic systems are benchmarked on the same data: (A) a single-pass RAG baseline, and (B) a stateful Actor–Critic reflection loop implemented in LangGraph, in which a dedicated Critic agent cross-references the image against the retrieved agronomic text before a diagnosis is finalised. The evaluation uses 100 adversarial cases drawn from the PlantVillage repository — targeting diseases of high visual similarity but divergent treatment — together with a 20% subset of cross-domain queries testing contextual rejection. Performance is measured by Hallucination Rate, Faithfulness Score, inference latency, and rejection accuracy, using an LLM-as-judge that is itself validated against human annotators (Cohen's κ ≥ 0.60) before use.
 
 > **Note on results.** The experimental run is in progress; Chapter 4 presents the evaluation design and result tables with placeholder cells (`[TBD]`). No performance figure in this report has been measured yet.
 
@@ -144,7 +144,7 @@ RAG (Lewis et al., 2020) grounds LLMs in an external corpus and reduces errors f
 flowchart LR
     Q[Image + Query] --> R[Retriever: Chroma top-k=5]
     R --> C[Retrieved context]
-    Q --> A[Actor: Gemini 2.5 Pro]
+    Q --> A[Actor: Gemini 2.5 Flash]
     C --> A
     A --> D[Diagnosis - one pass, no self-check]
 ```
@@ -171,7 +171,7 @@ flowchart TD
 
 ## 2.6 Benchmark Datasets in Agricultural AI
 
-PlantVillage (Hughes & Salathé, 2015) is widely used but criticised for its lack of real-world complexity. Newer multimodal resources evaluate richer behaviour: the CDDM dataset (Liu et al., 2024) provides ~137,000 images and ~1 million QA pairs for fine-grained diagnosis, and MIRAGE (Dongre et al., 2025) benchmarks expert consultative reasoning over 35,000+ real user–expert interactions. AgMMU (2025; arXiv:2504.10568) similarly targets comprehensive agricultural multimodal understanding. This study uses PlantVillage and a 2025 Tomato Leaf Dataset for its image cases, citing CDDM and MIRAGE as related multimodal benchmarks rather than as its evaluation source.
+PlantVillage (Hughes & Salathé, 2015) is widely used but criticised for its lack of real-world complexity. Newer multimodal resources evaluate richer behaviour: the CDDM dataset (Liu et al., 2024) provides ~137,000 images and ~1 million QA pairs for fine-grained diagnosis, and MIRAGE (Dongre et al., 2025) benchmarks expert consultative reasoning over 35,000+ real user–expert interactions. AgMMU (2025; arXiv:2504.10568) similarly targets comprehensive agricultural multimodal understanding. This study uses PlantVillage for its image cases, citing CDDM and MIRAGE as related multimodal benchmarks rather than as its evaluation source.
 
 ## 2.7 Research Gap
 
@@ -190,9 +190,11 @@ The study uses a controlled comparative design contrasting **System A** (single-
 
 ## 3.2 Datasets
 
-- **Adversarial visual set (100 cases).** Curated from the PlantVillage repository (Hughes & Salathé, 2015) and a 2025 Tomato Leaf Dataset, selected for *visual-ambiguity factors* — diseases of high morphological similarity but divergent treatment (e.g. Early Blight vs. Septoria Leaf Spot). Each image is paired with a verified pathological label in `data/ground_truth.csv`.
-- **Cross-domain robustness subset (20%).** Cases that pair an image of one species (e.g. potato) with a diagnostic request about another (e.g. corn); the correct response is refusal (label `REJECT`).
-- **Knowledge base.** FAO diagnostic handbooks and 2025/2026 agronomy / regional extension manuals (PDF).
+- **Adversarial visual set (100 cases).** Curated from the PlantVillage repository (Hughes & Salathé, 2015), obtained as the Parquet-backed public mirror `DScomp380/plant_village` on Hugging Face. Cases are selected for *visual-ambiguity factors* — diseases of high morphological similarity but divergent treatment (e.g. Early Blight vs. Septoria Leaf Spot). Each image is paired with a verified pathological label in `data/ground_truth.csv`. Selection is deterministic (`src/rag/curate_ground_truth.py`, `SEED=20260920`) and therefore reproducible: 80 ambiguous cases spanning the tomato Early Blight / Septoria / Late Blight triad plus Target Spot, Bacterial Spot and Leaf Mold, with potato Early and Late Blight included so any observed effect can be checked as non-tomato-specific.
+- **Cross-domain robustness subset (20%).** Twenty cases in two deliberate directions. *Direction A* (15 cases) pairs an off-crop image (corn, grape) with a query naming a crop that **is** in the knowledge base, so retrieval returns confident on-topic passages and the text modality actively encourages a diagnosis the image cannot support — the modality-misalignment trap the Critic is designed to catch. *Direction B* (5 cases) pairs an in-KB image with a query naming a crop absent from the corpus, testing plain out-of-scope refusal. The correct response in both is refusal (label `REJECT`).
+- **Knowledge base.** Eleven peer-reviewed university extension and government plant-pathology publications (PDF, 8.1 MB) covering tomato and potato foliar disease: Cornell, Kansas State, University of Kentucky, University of Wisconsin, University of Nebraska–Lincoln, Purdue, and North Dakota State. Sources and URLs are pinned in `src/rag/fetch_knowledge_base.py`.
+
+> **Deviation from the proposal.** The proposal specified FAO diagnostic handbooks. The corpus actually ingested is US extension-service material, selected because it provides the fine-grained differential-diagnosis detail (Early Blight vs. Septoria vs. Late Blight) that the adversarial case set turns on, and because each document is retrievable at a stable public URL. The substitution narrows geographic generality, which is recorded as a threat to validity (§5.4).
 
 ## 3.3 Knowledge Base and Ingestion
 
@@ -208,7 +210,7 @@ PDFs are extracted with `pypdf` and split with a recursive character splitter at
 
 Implemented as a stateful graph in **LangGraph** (Figure 2), `src/system_b_reflection/`:
 
-- **Actor (Diagnostician).** Google **Gemini 2.5 Pro**, role "plant pathologist", temperature **0.2** for reproducibility. Retrieves context and produces a diagnosis grounded in image + text.
+- **Actor (Diagnostician).** Google **Gemini 2.5 Flash**, role "plant pathologist", temperature **0.2** for reproducibility. Retrieves context and produces a diagnosis grounded in image + text.
 - **Critic (Reflector).** **Gemini 2.5 Flash**, temperature **0.7** (higher → divergent, skeptical checking). Receives the image and the Actor's draft, and returns strict JSON: `has_discrepancy`, `contradictions`, `missing_symptoms`, and an optional `refined_query`.
 - **Loop.** If the Critic reports a discrepancy, the graph routes back to the Actor with the feedback and refined query, forcing re-retrieval and revision. The loop is capped at **3 iterations** to bound latency and prevent over-correction; the final draft is returned.
 
@@ -222,7 +224,9 @@ Implemented as a stateful graph in **LangGraph** (Figure 2), `src/system_b_refle
 
 ## 3.7 Judge Validation
 
-Because HR and FS are scored by an LLM judge, the judge is validated before it is trusted (`eval/judge_validation.py`). A stratified subset of **25–30** outputs is labelled independently by the researcher plus one to two annotators using the shared rubric, and by the LLM judge. Agreement is quantified with **Cohen's κ** (Fleiss' κ for three or more raters), and judge precision/recall against human labels is reported. The full benchmark proceeds only after **κ ≥ 0.60** ("substantial", Landis & Koch, 1977). To reduce self-bias the judge should use a different model family from the Actor/Critic; the current configuration reuses a Gemini model, noted as a threat to validity (§5.4).
+Because HR and FS are scored by an LLM judge, the judge is validated before it is trusted (`eval/judge_validation.py`). A stratified subset of **25–30** outputs is labelled independently by the researcher plus one to two annotators using the shared rubric, and by the LLM judge. Agreement is quantified with **Cohen's κ** (Fleiss' κ for three or more raters), and judge precision/recall against human labels is reported. The full benchmark proceeds only after **κ ≥ 0.60** ("substantial", Landis & Koch, 1977).
+
+> **Judge independence.** Best practice is a judge from a different model family than the Actor/Critic. The executed configuration does not meet that bar: Actor, Critic and Judge are all `gemini-2.5-flash`, so the same model writes, critiques and grades each diagnosis. This was a deliberate cost decision. It makes the human-agreement gate in this section load-bearing rather than a formality — the judge is trusted only to the extent that measured κ against human annotators justifies it, and the limitation is carried into §5.4.
 
 ## 3.8 Implementation
 
@@ -231,7 +235,7 @@ Python; orchestration via LangGraph; RAG via Chroma + `pypdf` + LangChain text s
 **Figure 3. Evaluation pipeline and quality gates.**
 ```mermaid
 flowchart TD
-    P[FAO/agronomy PDFs] --> I[Ingest: chunk + embed]
+    P[Extension-service PDFs] --> I[Ingest: chunk + embed]
     I --> CH[(Chroma index)]
     CH --> G1{Gate: retrieval relevant?}
     G1 -- no --> I
@@ -258,10 +262,12 @@ flowchart TD
 
 ## 4.2 Experimental Setup
 
-- Actor: Gemini 2.5 Pro (T = 0.2) · Critic: Gemini 2.5 Flash (T = 0.7) · Judge: **[TBD — different family recommended]**
-- Embeddings: `gemini-embedding-001` · Vector store: Chroma (top-k = 5)
-- KB corpus size: **[TBD]** PDFs → **[TBD]** chunks
-- Hardware/runtime: **[TBD]**
+- Actor: Gemini 2.5 Flash (T = 0.2) · Critic: Gemini 2.5 Flash (T = 0.7) · Judge: Gemini 2.5 Flash (T = 0.0)
+- Embeddings: `gemini-embedding-001` · Vector store: local Chroma (chunk 1000 / overlap 150, top-k = 5)
+- KB corpus size: 11 PDFs (8.1 MB) → **[TBD]** chunks
+- Reflection loop capped at 3 iterations; runs per case: **[TBD]**
+- Hardware/runtime: Apple Silicon (macOS), CPython 3.14.7; all inference is remote via the Gemini Developer API
+- Judge independence: **not satisfied** — Actor, Critic and Judge share one model (§3.7, §5.4)
 
 ## 4.3 Judge-Validation Results (Gate)
 
@@ -318,7 +324,8 @@ If the reflection loop reduces hallucinations at acceptable latency, it offers a
 
 ## 5.4 Threats to Validity
 
-- **Judge self-bias.** The judge currently shares the Gemini family with the Actor/Critic; a non-Gemini judge (e.g. GPT-4o or Claude) is recommended for the final run.
+- **Judge self-bias.** The strongest limitation of this study. The judge is not merely the same *family* as the Actor and Critic — it is the **same model**, `gemini-2.5-flash`, scoring text the same model produced. Self-preference bias in LLM-as-judge setups is well documented, and the direction of any resulting error is not knowable from within the experiment. Two things bound the risk: the judge is validated against independent human annotation before use (§3.7), and the A-vs-B comparison is *paired*, so a judge bias shared by both systems partially cancels in the difference. Neither eliminates it. A non-Gemini judge (e.g. GPT-4o or Claude) remains the correct fix and is the first change recommended for any replication.
+- **Knowledge-base provenance.** The corpus is US extension-service material rather than the FAO handbooks named in the proposal (§3.2). Guidance is therefore calibrated to North American growing conditions, and generality to other agro-climatic regions is untested.
 - **Dataset realism.** PlantVillage's uniform backgrounds may inflate accuracy relative to field conditions.
 - **Non-determinism.** Mitigated by three runs per case and reported variance, but not eliminated.
 - **Latency measurement.** Taken in a development environment; not a device-level mobile benchmark.
