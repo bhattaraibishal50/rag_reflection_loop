@@ -355,15 +355,33 @@ This result is consistent with a broader finding in the literature that LLMs str
 
 ## 5.1 Summary of Findings
 
-*To be finalised after Chapter 4.* This study set out to test whether a multi-agent Actor–Critic reflection loop reduces modality-misalignment hallucinations in multimodal agricultural diagnostics relative to a single-pass RAG baseline, and at what latency cost.
+This study tested whether a multi-agent Actor–Critic reflection loop reduces modality-misalignment hallucinations in multimodal agricultural diagnostics relative to a single-pass RAG baseline, and at what latency cost. Across 100 adversarial cases run three times through both pipelines (600 diagnoses, 0 unit failures), the answer is:
+
+**The reflection loop produced no measurable improvement, at 2.79× the latency.**
+
+- **RQ1 — no effect.** Hallucination Rate was 0.273 for the baseline and 0.272 with reflection (Δ = −0.0012, 95% CI [−0.0365, +0.0349]); binarised, the baseline produced a fully-supported diagnosis in 52.7% of cases against reflection's 51.3% (McNemar p = 0.708). Faithfulness likewise did not move (0.125 → 0.120, 95% CI [−0.0170, +0.0061]). Every interval contains zero, and no subgroup — ambiguous-only, tomato, potato, cross-domain — reaches significance.
+- **RQ2 — a substantial and reliably measured cost.** Mean latency rose from 8.61 s to 24.06 s, a 2.79× overhead, with variance 5.6× the baseline's. The Critic requested at least one revision in 42% of runs.
+- **RQ3 — not answerable as designed.** Both systems rejected 100% of cross-domain queries (60/60 each). The task saturated, leaving no headroom in which reflection could demonstrate a benefit.
+
+The null result is not an artifact of an inactive loop. Reflection changed outputs in a substantial fraction of cases — it simply changed them symmetrically, improving 30 cases and degrading 34.
 
 ## 5.2 Objectives Revisited
 
-Each objective (O1–O4, §1.4) will be addressed against the measured results: whether the Critic resolved visual–textual discrepancies (O1/O3), how the two pipelines compared (O2), and whether System B improved cross-domain rejection (O4).
+- **O1 / O3 — did the Critic resolve visual–textual discrepancies?** Partially, but without net benefit. The Critic engaged in 42% of runs (126 of 300 went beyond one iteration, 44 hit the 3-iteration cap), so discrepancies were being flagged and revisions attempted. The discordant McNemar counts — 30 improved against 34 degraded — show these interventions were close to a coin flip. The Critic identified problems; it did not reliably identify *real* ones.
+- **O2 — how did the two pipelines compare?** On accuracy, indistinguishably (RQ1). On cost, decisively in the baseline's favour (RQ2). Given equal accuracy, the single-pass system is the better engineering choice for this task.
+- **O4 — did System B improve cross-domain rejection?** Untestable. Both systems achieved 100%, so no improvement was possible to detect. The objective is not met, but neither is it refuted — the instrument lacked resolution.
 
 ## 5.3 Implications
 
-If the reflection loop reduces hallucinations at acceptable latency, it offers a path toward trustworthy, evidence-backed mobile diagnostics and supports the broader move from reactive to deliberate reasoning in precision agriculture (Srinivasu et al., 2026). Conversely, if reflection yields little gain — or if over-correction and added latency outweigh its benefit (cf. Huang et al., 2024) — that is an equally informative result: it would indicate that image-grounded self-critique alone is insufficient for modality-misalignment errors, and that a stronger external signal (e.g. a dedicated vision classifier feeding the Critic) is required. The contribution stands either way, because the quantity being established — *how much* reflection helps on visually ambiguous crop cases, and at what cost — is currently unmeasured.
+The measured outcome is the second branch anticipated in the proposal: reflection yielded no gain while adding latency (cf. Huang et al., 2024, on the limits of intrinsic self-correction). Three implications follow.
+
+**Image-grounded self-critique alone is insufficient for modality-misalignment errors.** The Critic shares a model, a knowledge base and an input image with the Actor. It therefore has no information the Actor lacked, and re-examination at a higher temperature perturbs the answer rather than correcting it. A stronger *external* signal — a dedicated vision classifier feeding the Critic an independent label, or a retrieval step the Actor did not perform — is the architecturally coherent next step.
+
+**The binding constraint appears to be retrieval, not reasoning.** Faithfulness was low in *both* arms (0.125 and 0.120), meaning only a small fraction of claims in any diagnosis were supported by retrieved context regardless of architecture. A reflection loop can only re-reason over the evidence supplied to it. Effort spent on the generation architecture was, on this evidence, effort spent at the wrong layer.
+
+**For deployment, the latency finding is the actionable one.** For the low-connectivity smallholder context motivating this work (§1.1), a 2.79× mean overhead with 5.6× the variance is a material cost, and it buys nothing measurable here. Worst-case latency, not mean latency, governs usability on intermittent mobile links — and the right-skewed distribution driven by the 44 cap-hitting cases is precisely the wrong shape for that setting.
+
+The contribution stands as originally argued: the quantity at issue was *how much* reflection helps on visually ambiguous crop cases and at what cost. That quantity is now measured. The answer — no detectable benefit, 2.79× cost — is a useful negative result for a field in which multi-agent reflection is frequently assumed beneficial without domain-specific evidence.
 
 ## 5.4 Threats to Validity
 
@@ -371,13 +389,20 @@ If the reflection loop reduces hallucinations at acceptable latency, it offers a
 - **Knowledge-base provenance.** The corpus is US extension-service material rather than the FAO handbooks named in the proposal (§3.2). Guidance is therefore calibrated to North American growing conditions, and generality to other agro-climatic regions is untested.
 - **Dataset realism.** PlantVillage's uniform backgrounds may inflate accuracy relative to field conditions.
 - **Non-determinism.** Mitigated by three runs per case and reported variance, but not eliminated.
-- **Latency measurement.** Taken in a development environment; not a device-level mobile benchmark.
+- **Latency measurement.** Taken in a development environment; not a device-level mobile benchmark. Runs executed with four concurrent workers, which may inflate absolute per-call latency; the A-vs-B comparison is unaffected because both systems ran under identical conditions.
+- **RQ3 ceiling effect.** Both systems scored 100% on cross-domain rejection, so the comparison has no discriminative power (§4.6). The cross-domain set — an off-crop image paired with a mismatched query — proved trivially detectable by a single-pass system. RQ3 is therefore unanswered rather than answered negatively, and a harder rejection set is required to test it.
+- **Statistical power.** With 300 paired observations, the 95% CI on the hallucination difference spans roughly ±3.5 percentage points. Effects smaller than that would not be detected; the result should be read as "no effect of practical size" rather than "exactly zero effect".
+- **Single model family.** All findings are measured on `gemini-3.6-flash`. Whether a more capable Actor, or a Critic from a different family, would change the outcome is untested and is the most important open question left by this study.
 
 ## 5.5 Future Work
 
 - **Multi-sensor fusion:** incorporate hyperspectral or soil-sensor data for root-borne disorders.
 - **On-device small models:** evaluate compact models to cut latency and remove the connectivity dependency.
 - **Safety guardrails:** deterministic checks before any chemical-application recommendation.
+- **Independent judge:** re-run the evaluation with a non-Gemini judge (e.g. GPT-4o or Claude) to remove the shared-model bias identified in §5.4. This is the single highest-value change for any replication.
+- **Strengthen the retrieval layer:** faithfulness below 0.13 in both arms indicates the retriever, not the generator, is the limiting factor. Re-ranking, larger top-k, or hybrid keyword–dense retrieval should be evaluated before any further work on agent architecture.
+- **A harder cross-domain set:** closely-related species, or in-crop diseases deliberately absent from the knowledge base, to give RQ3 the discriminative headroom the current set lacks.
+- **External-signal Critic:** supply the Critic with an independent visual classification rather than the same image the Actor already saw, testing whether self-correction failure is attributable to the absence of new information.
 - **Federated learning:** privacy-preserving, on-farm adaptation.
 
 ---
