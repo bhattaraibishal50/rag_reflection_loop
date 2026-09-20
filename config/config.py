@@ -24,10 +24,10 @@ class Config:
     prompts_dir: Path = ROOT / "prompts"
 
     # --- Models (swappable via env) ---
-    actor_model: str = os.getenv("ACTOR_MODEL", "gemini-2.5-pro")
-    critic_model: str = os.getenv("CRITIC_MODEL", "gemini-2.5-flash")
+    actor_model: str = os.getenv("ACTOR_MODEL", "gemini-3.6-flash")
+    critic_model: str = os.getenv("CRITIC_MODEL", "gemini-3.6-flash")
     # Judge SHOULD differ from Actor/Critic family to reduce self-bias (see proposal 3.1).
-    judge_model: str = os.getenv("JUDGE_MODEL", "gemini-2.5-flash")
+    judge_model: str = os.getenv("JUDGE_MODEL", "gemini-3.6-flash")
     # gemini-embedding-001 is the Gemini Developer API (AI Studio key) embedding model.
     # (text-embedding-005 is a Vertex-only name; use it only if you switch to Vertex.)
     embedding_model: str = os.getenv("EMBEDDING_MODEL", "gemini-embedding-001")

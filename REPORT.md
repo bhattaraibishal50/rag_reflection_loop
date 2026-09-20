@@ -144,7 +144,7 @@ RAG (Lewis et al., 2020) grounds LLMs in an external corpus and reduces errors f
 flowchart LR
     Q[Image + Query] --> R[Retriever: Chroma top-k=5]
     R --> C[Retrieved context]
-    Q --> A[Actor: Gemini 2.5 Flash]
+    Q --> A[Actor: Gemini 3.6 Flash]
     C --> A
     A --> D[Diagnosis - one pass, no self-check]
 ```
@@ -210,8 +210,8 @@ PDFs are extracted with `pypdf` and split with a recursive character splitter at
 
 Implemented as a stateful graph in **LangGraph** (Figure 2), `src/system_b_reflection/`:
 
-- **Actor (Diagnostician).** Google **Gemini 2.5 Flash**, role "plant pathologist", temperature **0.2** for reproducibility. Retrieves context and produces a diagnosis grounded in image + text.
-- **Critic (Reflector).** **Gemini 2.5 Flash**, temperature **0.7** (higher → divergent, skeptical checking). Receives the image and the Actor's draft, and returns strict JSON: `has_discrepancy`, `contradictions`, `missing_symptoms`, and an optional `refined_query`.
+- **Actor (Diagnostician).** Google **Gemini 3.6 Flash**, role "plant pathologist", temperature **0.2** for reproducibility. Retrieves context and produces a diagnosis grounded in image + text.
+- **Critic (Reflector).** **Gemini 3.6 Flash**, temperature **0.7** (higher → divergent, skeptical checking). Receives the image and the Actor's draft, and returns strict JSON: `has_discrepancy`, `contradictions`, `missing_symptoms`, and an optional `refined_query`.
 - **Loop.** If the Critic reports a discrepancy, the graph routes back to the Actor with the feedback and refined query, forcing re-retrieval and revision. The loop is capped at **3 iterations** to bound latency and prevent over-correction; the final draft is returned.
 
 ## 3.6 Evaluation Framework
@@ -226,7 +226,7 @@ Implemented as a stateful graph in **LangGraph** (Figure 2), `src/system_b_refle
 
 Because HR and FS are scored by an LLM judge, the judge is validated before it is trusted (`eval/judge_validation.py`). A stratified subset of **25–30** outputs is labelled independently by the researcher plus one to two annotators using the shared rubric, and by the LLM judge. Agreement is quantified with **Cohen's κ** (Fleiss' κ for three or more raters), and judge precision/recall against human labels is reported. The full benchmark proceeds only after **κ ≥ 0.60** ("substantial", Landis & Koch, 1977).
 
-> **Judge independence.** Best practice is a judge from a different model family than the Actor/Critic. The executed configuration does not meet that bar: Actor, Critic and Judge are all `gemini-2.5-flash`, so the same model writes, critiques and grades each diagnosis. This was a deliberate cost decision. It makes the human-agreement gate in this section load-bearing rather than a formality — the judge is trusted only to the extent that measured κ against human annotators justifies it, and the limitation is carried into §5.4.
+> **Judge independence.** Best practice is a judge from a different model family than the Actor/Critic. The executed configuration does not meet that bar: Actor, Critic and Judge are all `gemini-3.6-flash`, so the same model writes, critiques and grades each diagnosis. This was a deliberate cost decision. It makes the human-agreement gate in this section load-bearing rather than a formality — the judge is trusted only to the extent that measured κ against human annotators justifies it, and the limitation is carried into §5.4.
 
 ## 3.8 Implementation
 
@@ -262,12 +262,14 @@ flowchart TD
 
 ## 4.2 Experimental Setup
 
-- Actor: Gemini 2.5 Flash (T = 0.2) · Critic: Gemini 2.5 Flash (T = 0.7) · Judge: Gemini 2.5 Flash (T = 0.0)
+- Actor: Gemini 3.6 Flash (T = 0.2) · Critic: Gemini 3.6 Flash (T = 0.7) · Judge: Gemini 3.6 Flash (T = 0.0)
 - Embeddings: `gemini-embedding-001` · Vector store: local Chroma (chunk 1000 / overlap 150, top-k = 5)
 - KB corpus size: 11 PDFs (8.1 MB) → **[TBD]** chunks
 - Reflection loop capped at 3 iterations; runs per case: **[TBD]**
 - Hardware/runtime: Apple Silicon (macOS), CPython 3.14.7; all inference is remote via the Gemini Developer API
 - Judge independence: **not satisfied** — Actor, Critic and Judge share one model (§3.7, §5.4)
+
+> **Model availability note.** The run was originally configured for `gemini-2.5-flash`. That model returns `404 — no longer available to new users` on a newly created Google Cloud project: existing projects retain access, new ones do not. The benchmark therefore executes on **`gemini-3.6-flash`**, the successor named in Google's own deprecation response, verified to accept multimodal (image + text) input before the run. `gemini-embedding-001` remains available, so the Chroma index built earlier is still valid and was not rebuilt.
 
 ## 4.3 Judge-Validation Results (Gate)
 
@@ -324,7 +326,7 @@ If the reflection loop reduces hallucinations at acceptable latency, it offers a
 
 ## 5.4 Threats to Validity
 
-- **Judge self-bias.** The strongest limitation of this study. The judge is not merely the same *family* as the Actor and Critic — it is the **same model**, `gemini-2.5-flash`, scoring text the same model produced. Self-preference bias in LLM-as-judge setups is well documented, and the direction of any resulting error is not knowable from within the experiment. Two things bound the risk: the judge is validated against independent human annotation before use (§3.7), and the A-vs-B comparison is *paired*, so a judge bias shared by both systems partially cancels in the difference. Neither eliminates it. A non-Gemini judge (e.g. GPT-4o or Claude) remains the correct fix and is the first change recommended for any replication.
+- **Judge self-bias.** The strongest limitation of this study. The judge is not merely the same *family* as the Actor and Critic — it is the **same model**, `gemini-3.6-flash`, scoring text the same model produced. Self-preference bias in LLM-as-judge setups is well documented, and the direction of any resulting error is not knowable from within the experiment. Two things bound the risk: the judge is validated against independent human annotation before use (§3.7), and the A-vs-B comparison is *paired*, so a judge bias shared by both systems partially cancels in the difference. Neither eliminates it. A non-Gemini judge (e.g. GPT-4o or Claude) remains the correct fix and is the first change recommended for any replication.
 - **Knowledge-base provenance.** The corpus is US extension-service material rather than the FAO handbooks named in the proposal (§3.2). Guidance is therefore calibrated to North American growing conditions, and generality to other agro-climatic regions is untested.
 - **Dataset realism.** PlantVillage's uniform backgrounds may inflate accuracy relative to field conditions.
 - **Non-determinism.** Mitigated by three runs per case and reported variance, but not eliminated.
