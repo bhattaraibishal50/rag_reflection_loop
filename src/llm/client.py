@@ -9,6 +9,7 @@ from __future__ import annotations
 import base64
 import mimetypes
 import random
+import threading
 import time
 from pathlib import Path
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -31,22 +32,28 @@ def _is_retryable(exc: Exception) -> bool:
 # usage_metadata on the floor once you take `.content`.
 USAGE: dict[str, dict[str, int]] = {}
 RETRIES: dict[str, int] = {"retryable_errors": 0, "rate_limit_429": 0}
+# The benchmark runs cases concurrently, so every mutation below is under this
+# lock. Without it, `slot[k] += 1` (read-modify-write) silently loses counts and
+# the reported token totals — and therefore the cost figures — come out low.
+_usage_lock = threading.Lock()
 
 
 def reset_usage() -> None:
     """Zero the counters (call at the start of a measured run)."""
-    USAGE.clear()
-    RETRIES.update({"retryable_errors": 0, "rate_limit_429": 0})
+    with _usage_lock:
+        USAGE.clear()
+        RETRIES.update({"retryable_errors": 0, "rate_limit_429": 0})
 
 
 def _record_usage(model: str, message) -> None:
     um = getattr(message, "usage_metadata", None) or {}
-    slot = USAGE.setdefault(model, {"calls": 0, "input_tokens": 0,
-                                    "output_tokens": 0, "total_tokens": 0})
-    slot["calls"] += 1
-    slot["input_tokens"] += int(um.get("input_tokens") or 0)
-    slot["output_tokens"] += int(um.get("output_tokens") or 0)
-    slot["total_tokens"] += int(um.get("total_tokens") or 0)
+    with _usage_lock:
+        slot = USAGE.setdefault(model, {"calls": 0, "input_tokens": 0,
+                                        "output_tokens": 0, "total_tokens": 0})
+        slot["calls"] += 1
+        slot["input_tokens"] += int(um.get("input_tokens") or 0)
+        slot["output_tokens"] += int(um.get("output_tokens") or 0)
+        slot["total_tokens"] += int(um.get("total_tokens") or 0)
 
 
 def with_retry(fn, *, max_attempts: int = 5, base_delay: float = 2.0):
@@ -61,9 +68,10 @@ def with_retry(fn, *, max_attempts: int = 5, base_delay: float = 2.0):
         except Exception as exc:  # noqa: BLE001 — LangChain wraps a variety of error types
             if attempt == max_attempts or not _is_retryable(exc):
                 raise
-            RETRIES["retryable_errors"] += 1
-            if "429" in str(exc) or "resource_exhausted" in str(exc).lower():
-                RETRIES["rate_limit_429"] += 1
+            with _usage_lock:
+                RETRIES["retryable_errors"] += 1
+                if "429" in str(exc) or "resource_exhausted" in str(exc).lower():
+                    RETRIES["rate_limit_429"] += 1
             delay = base_delay * (2 ** (attempt - 1)) + random.uniform(0, 1)
             print(f"  [retry {attempt}/{max_attempts} after {delay:.1f}s: {exc}]")
             time.sleep(delay)

@@ -90,7 +90,7 @@ def _cmd_validate_judge(args: argparse.Namespace) -> None:
 
 def _cmd_benchmark(args: argparse.Namespace) -> None:
     from eval.run_benchmark import run, summarize
-    summarize(run())
+    summarize(run(args.workers))
 
 
 def _cmd_plots(args: argparse.Namespace) -> None:
@@ -152,6 +152,9 @@ def build_parser() -> argparse.ArgumentParser:
     sp.set_defaults(func=_cmd_validate_judge)
 
     sp = sub.add_parser("benchmark", help="run the full A-vs-B benchmark + stats")
+    sp.add_argument("--workers", type=int, default=1,
+                    help="cases run concurrently (default 1). Cuts wall time only; "
+                         "cost is per-token and unchanged. Raise while 429s stay at 0.")
     sp.set_defaults(func=_cmd_benchmark)
 
     sp = sub.add_parser("plots", help="generate Chapter 4 figures from benchmark results")

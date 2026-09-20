@@ -7,6 +7,10 @@ Run:  python cli.py benchmark
 """
 from __future__ import annotations
 
+import concurrent.futures
+import threading
+import time
+
 import numpy as np
 import pandas as pd
 
@@ -15,6 +19,8 @@ from eval.metrics import faithfulness_score, hallucination_rate, rejection_corre
 from src.systems import baseline as system_a_baseline
 from src.systems.reflection import graph as system_b
 
+_print_lock = threading.Lock()
+
 
 def _default_query(row) -> str:
     if row["case_type"] == "cross_domain":
@@ -22,37 +28,109 @@ def _default_query(row) -> str:
     return f"What disease affects this {row['crop']}?"
 
 
-def run() -> pd.DataFrame:
+def _one_unit(case, run_i: int) -> list[dict]:
+    """Run BOTH systems for one (case, run) pair and return their result rows.
+
+    A and B stay together inside a single unit of work on purpose: the analysis
+    pairs them on (image, run), so both must exist for that key or the pair is
+    dropped by `_paired_frame`. Keeping them in one task means a failure loses a
+    whole pair rather than orphaning half of one.
+    """
+    image = str(cfg.images_dir / case["image_filename"])
+    query = _default_query(case)
+    out = []
+    for system in (system_a_baseline, system_b):
+        res = system.diagnose(image, query)
+        hr = hallucination_rate(res["diagnosis"], res["context"],
+                                case["true_label"], image_path=image)
+        try:
+            faith = faithfulness_score(res["diagnosis"], res["context"], query)
+        except Exception as e:  # don't let one RAGAS failure abort the whole run
+            with _print_lock:
+                print(f"  [faithfulness failed for {case['image_filename']}: {e}]")
+            faith = None
+        out.append({
+            "image": case["image_filename"],
+            "true_label": case["true_label"],
+            "case_type": case["case_type"],
+            "system": res["system"],
+            "run": run_i,
+            "iterations": res["iterations"],
+            "latency_s": res["latency_s"],
+            "hallucination_rate": hr.get("hallucination_rate"),
+            "faithfulness": faith,
+            "rejection_correct": rejection_correct(res["diagnosis"], case["true_label"]),
+        })
+    return out
+
+
+def run(workers: int = 1) -> pd.DataFrame:
+    """Execute the benchmark, optionally running (case, run) units concurrently.
+
+    `workers` only changes WALL TIME, never cost or results: billing is per token,
+    and each unit is independent. Latency per call is still measured inside the
+    system modules, so `latency_s` stays valid under concurrency — but note that
+    with many workers the API may slow individual calls, so latency comparisons
+    should come from a consistent worker count (RQ2 reports A vs B measured in the
+    same run, so the comparison stays internally fair).
+
+    Rate limits are the real ceiling. The pilot recorded zero 429s, and
+    `with_retry` backs off if they appear; raise workers only while 429s stay low.
+    """
+    # Build the Chroma client ONCE, here, before any worker starts. Constructing
+    # it concurrently races inside chromadb's shared-client registry.
+    from src.rag.retriever import warm_retriever
+    warm_retriever()
+
     gt = pd.read_csv(cfg.ground_truth_csv, comment="#")
-    rows = []
-    for _, case in gt.iterrows():
-        image = str(cfg.images_dir / case["image_filename"])
-        query = _default_query(case)
-        for run_i in range(cfg.runs_per_case):
-            for system in (system_a_baseline, system_b):
-                res = system.diagnose(image, query)
-                hr = hallucination_rate(res["diagnosis"], res["context"],
-                                        case["true_label"], image_path=image)
+    units = [(case, run_i)
+             for _, case in gt.iterrows()
+             for run_i in range(cfg.runs_per_case)]
+    total = len(units)
+    print(f"BENCHMARK: {len(gt)} cases x {cfg.runs_per_case} runs x 2 systems "
+          f"= {total * 2} diagnoses  (workers={workers})")
+
+    rows: list[dict] = []
+    done = 0
+    t0 = time.perf_counter()
+
+    def _record(result: list[dict]) -> None:
+        nonlocal done
+        rows.extend(result)
+        done += 1
+        elapsed = time.perf_counter() - t0
+        rate = done / elapsed if elapsed else 0
+        eta = (total - done) / rate / 60 if rate else float("nan")
+        print(f"  [{done}/{total}] {result[0]['image'][:38]:38s} "
+              f"elapsed={elapsed/60:5.1f}m eta={eta:5.1f}m", flush=True)
+
+    if workers <= 1:
+        for case, run_i in units:
+            _record(_one_unit(case, run_i))
+    else:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
+            futures = {pool.submit(_one_unit, case, run_i): (case, run_i)
+                       for case, run_i in units}
+            for fut in concurrent.futures.as_completed(futures):
+                case, run_i = futures[fut]
                 try:
-                    faith = faithfulness_score(res["diagnosis"], res["context"], query)
-                except Exception as e:  # don't let one RAGAS failure abort the whole run
-                    print(f"  [faithfulness failed for {case['image_filename']}: {e}]")
-                    faith = None
-                rows.append({
-                    "image": case["image_filename"],
-                    "true_label": case["true_label"],
-                    "case_type": case["case_type"],
-                    "system": res["system"],
-                    "run": run_i,
-                    "iterations": res["iterations"],
-                    "latency_s": res["latency_s"],
-                    "hallucination_rate": hr.get("hallucination_rate"),
-                    "faithfulness": faith,
-                    "rejection_correct": rejection_correct(res["diagnosis"], case["true_label"]),
-                })
+                    result = fut.result()
+                except Exception as e:  # noqa: BLE001 — one unit must not kill the run
+                    with _print_lock:
+                        print(f"  [UNIT FAILED {case['image_filename']} run={run_i}: "
+                              f"{type(e).__name__}: {e}]", flush=True)
+                    continue
+                with _print_lock:
+                    _record(result)
+
     df = pd.DataFrame(rows)
+    # Deterministic order regardless of completion order, so the CSV is stable.
+    if not df.empty:
+        df = df.sort_values(["image", "run", "system"]).reset_index(drop=True)
     cfg.results_dir.mkdir(parents=True, exist_ok=True)
     df.to_csv(cfg.results_dir / "benchmark_raw.csv", index=False)
+    print(f"\nWrote {cfg.results_dir / 'benchmark_raw.csv'} "
+          f"({len(df)} rows, {time.perf_counter() - t0:.0f}s)")
     return df
 
 
@@ -142,4 +220,5 @@ def summarize(df: pd.DataFrame) -> None:
 
 
 if __name__ == "__main__":
-    summarize(run())
+    import sys
+    summarize(run(int(sys.argv[1]) if len(sys.argv) > 1 else 1))

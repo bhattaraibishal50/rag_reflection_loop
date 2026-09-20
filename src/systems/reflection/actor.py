@@ -3,19 +3,17 @@ from __future__ import annotations
 
 from config.config import cfg
 from src.llm.client import LLMClient, load_prompt
-from src.rag.retriever import Retriever
+from src.rag.retriever import get_retriever
 from src.systems.reflection.state import ReflectionState
 
 _actor = LLMClient(cfg.actor_model, temperature=cfg.actor_temperature)
 _prompt = load_prompt("actor_system.txt")
-_retriever = None  # lazy: don't touch Chroma at import (lets the app start w/o an index)
+def _get_retriever():
+    """Shared, lock-guarded Retriever (still lazy: no Chroma access at import).
 
-
-def _get_retriever() -> Retriever:
-    global _retriever
-    if _retriever is None:
-        _retriever = Retriever()
-    return _retriever
+    The previous unlocked module-global raced under the parallel benchmark.
+    """
+    return get_retriever()
 
 
 def actor_node(state: ReflectionState) -> ReflectionState:

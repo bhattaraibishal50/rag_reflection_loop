@@ -11,11 +11,13 @@ import time
 
 from config.config import cfg
 from src.llm.client import LLMClient, load_prompt
-from src.rag.retriever import Retriever
+from src.rag.retriever import get_retriever
 
 
 def diagnose(image_path: str, query: str = "What disease does this plant have?") -> dict:
-    retriever = Retriever()
+    # Shared, lock-guarded instance: building a PersistentClient per call is both
+    # wasteful and unsafe once cases run concurrently (see retriever.get_retriever).
+    retriever = get_retriever()
     actor = LLMClient(cfg.actor_model, temperature=cfg.actor_temperature)
     actor_prompt = load_prompt("actor_system.txt")
 

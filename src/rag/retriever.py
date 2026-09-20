@@ -7,6 +7,7 @@ before building agents.
 from __future__ import annotations
 
 import sys
+import threading
 
 import chromadb
 
@@ -40,6 +41,38 @@ class Retriever:
     def as_context(self, query: str, top_k: int | None = None) -> str:
         hits = self.search(query, top_k)
         return "\n\n".join(f"[{h['source']}] {h['text']}" for h in hits)
+
+
+# --- Process-wide shared instance -------------------------------------------
+# The parallel benchmark runs many cases at once, and chromadb.PersistentClient is
+# NOT safe to construct concurrently for the same path: its SharedSystemClient
+# registry races, producing either `KeyError: <chroma_db path>` or a half-built
+# client that raises `AttributeError: 'RustBindingsAPI' object has no attribute
+# 'bindings'`. Both were observed with 2 workers before this existed.
+#
+# One instance, built once under a lock, then reused. Queries themselves are
+# read-only against the persisted index, so sharing is safe.
+_instance: "Retriever | None" = None
+_instance_lock = threading.Lock()
+
+
+def get_retriever() -> "Retriever":
+    """Return the shared Retriever, constructing it once. Thread-safe.
+
+    Call once from the main thread before starting a worker pool to pay the
+    construction cost up front (`warm_retriever`).
+    """
+    global _instance
+    if _instance is None:
+        with _instance_lock:
+            if _instance is None:  # re-check inside the lock
+                _instance = Retriever()
+    return _instance
+
+
+def warm_retriever() -> "Retriever":
+    """Explicitly build the shared Retriever before any concurrency starts."""
+    return get_retriever()
 
 
 if __name__ == "__main__":
