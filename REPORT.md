@@ -1,6 +1,7 @@
 <!--
   MASTER'S REPORT — working draft.
-  RESULTS (Chapter 4) ARE PLACEHOLDERS. Every value marked [TBD] or "pending run"
+  RESULTS (Chapter 4) ARE MEASURED as of 2026-09-20 (600 diagnoses, 0 failures).
+  Only the judge-validation gate (4.3) remains [TBD] pending human annotation.
   is NOT yet measured. Populate only from eval/results/benchmark_raw.csv after the
   real benchmark run. Do not present placeholders as findings.
 -->
@@ -42,7 +43,7 @@ The integration of Multimodal Large Language Models (MLLMs) with Retrieval-Augme
 
 This research investigates whether an autonomous multi-agent reflection loop reduces hallucinations relative to a standard single-pass pipeline. Two diagnostic systems are benchmarked on the same data: (A) a single-pass RAG baseline, and (B) a stateful Actor–Critic reflection loop implemented in LangGraph, in which a dedicated Critic agent cross-references the image against the retrieved agronomic text before a diagnosis is finalised. The evaluation uses 100 adversarial cases drawn from the PlantVillage repository — targeting diseases of high visual similarity but divergent treatment — together with a 20% subset of cross-domain queries testing contextual rejection. Performance is measured by Hallucination Rate, Faithfulness Score, inference latency, and rejection accuracy, using an LLM-as-judge that is itself validated against human annotators (Cohen's κ ≥ 0.60) before use.
 
-> **Note on results.** The experimental run is in progress; Chapter 4 presents the evaluation design and result tables with placeholder cells (`[TBD]`). No performance figure in this report has been measured yet.
+> **Note on results.** The experimental run completed on 2026-09-20: 100 cases x 3 runs x 2 systems = 600 diagnoses, 0 unit failures. Chapter 4 reports measured values. The single exception is the judge-validation gate (4.3), which awaits human annotation; until it passes, all hallucination figures are provisional.
 
 ---
 
@@ -251,21 +252,24 @@ flowchart TD
 
 # Chapter 4. Results and Analysis
 
-> ⚠️ **Placeholder chapter.** The experimental run has not yet been executed. Every `[TBD]` below is unmeasured and must be populated **only** from `eval/results/benchmark_raw.csv`. Numbers shown are *not* findings.
+> **Status.** The benchmark was executed on 2026-09-20: 100 cases × 3 runs × 2 systems = **600 diagnoses**, 0 unit failures, wall time 70 min at 4 workers. All figures below are measured from `eval/results/benchmark_raw.csv`. The only remaining `[TBD]` values are in §4.3, which requires human annotation.
+>
+> ⚠️ **All results in this chapter are provisional until the §4.3 judge-validation gate passes.** Hallucination Rate is produced by an LLM judge that has not yet been validated against human labels.
 
 ## 4.1 Dataset Summary
 
-- Total adversarial cases: **[TBD — target 100]**
-- Ambiguous-disease cases: **[TBD — target 80]**
-- Cross-domain cases: **[TBD — target 20]**
-- Runs per case: 3 (per design)
+- Total adversarial cases: **100**
+- Ambiguous-disease cases: **80**
+- Cross-domain cases: **20**
+- Runs per case: 3 (per design) → 600 total diagnoses
+- Crops represented: tomato (69 cases), potato (16), corn (8), grape (7)
 
 ## 4.2 Experimental Setup
 
 - Actor: Gemini 3.6 Flash (T = 0.2) · Critic: Gemini 3.6 Flash (T = 0.7) · Judge: Gemini 3.6 Flash (T = 0.0)
 - Embeddings: `gemini-embedding-001` · Vector store: local Chroma (chunk 1000 / overlap 150, top-k = 5)
-- KB corpus size: 11 PDFs (8.1 MB) → **[TBD]** chunks
-- Reflection loop capped at 3 iterations; runs per case: **[TBD]**
+- KB corpus size: 11 PDFs (8.1 MB) → **152** chunks
+- Reflection loop capped at 3 iterations; runs per case: **3**
 - Hardware/runtime: Apple Silicon (macOS), CPython 3.14.7; all inference is remote via the Gemini Developer API
 - Judge independence: **not satisfied** — Actor, Critic and Judge share one model (§3.7, §5.4)
 
@@ -284,29 +288,66 @@ flowchart TD
 
 | Metric | System A (baseline) | System B (reflection) | Δ (B − A) | Paired test |
 |---|---|---|---|---|
-| Faithfulness Score (mean ± sd) | [TBD] | [TBD] | [TBD] | [TBD] |
-| Hallucination Rate (mean ± sd) | [TBD] | [TBD] | [TBD] | McNemar p = [TBD] |
+| Faithfulness Score (mean ± sd) | 0.125 ± 0.101 | 0.120 ± 0.099 | −0.0055 (−0.55 pp; −4.4% relative) | 95% CI [−0.0170, +0.0061] — spans 0 |
+| Hallucination Rate (mean ± sd) | 0.273 ± 0.311 | 0.272 ± 0.307 | −0.0012 (−0.12 pp; −0.4% relative) | 95% CI [−0.0365, +0.0349] — spans 0; McNemar p = 0.708 |
 
-*Report Δ as both an absolute change (percentage points) and a relative change (%), and state the 95% CI. Do not conflate the two.*
+Paired on `(image, run)`; n = 300 pairs. Confidence intervals are 5,000-sample bootstrap percentiles of the paired mean difference. The McNemar test uses the binarised "any hallucination" outcome: System A produced a fully-supported diagnosis in **52.7%** of cases against System B's **51.3%**, with discordant pairs of 30 (B better) versus 34 (A better).
+
+**Finding: the null hypothesis is not rejected.** Neither metric shows a detectable difference. Both confidence intervals comfortably contain zero, and the McNemar p-value of 0.708 is far from any conventional threshold. The reflection loop neither reduced nor increased hallucination in this experiment.
+
+### Subgroup analysis
+
+| Subgroup | n pairs | A | B | Δ (B − A) | 95% CI |
+|---|---|---|---|---|---|
+| All cases | 300 | 0.273 | 0.272 | −0.0012 | [−0.0365, +0.0349] |
+| Ambiguous only | 240 | 0.340 | 0.339 | −0.0004 | [−0.0436, +0.0451] |
+| Tomato, ambiguous | 198 | 0.353 | 0.367 | +0.0142 | [−0.0349, +0.0657] |
+| Potato, ambiguous | 42 | 0.277 | 0.208 | −0.0691 | [−0.1706, +0.0284] |
+| Cross-domain | 60 | 0.004 | 0.000 | −0.0042 | [−0.0125, +0.0000] |
+
+No subgroup reaches significance. The potato subgroup shows the largest point estimate in favour of reflection (−6.9 pp) but with an interval four times wider than the estimate, on only 14 cases — it is not evidence of an effect, and should not be reported as a trend.
+
+> **Note on an earlier partial result.** An interrupted run (113 of 300 units, tomato-only and ambiguous-only, terminated by budget exhaustion) produced an apparently significant *harmful* effect: Δ = +0.0794, 95% CI [+0.0059, +0.1539], McNemar p = 0.0104. That effect **did not survive completion of the design**. The partial sample was not random — it was whatever executed before credits ran out, under a fixed case ordering — and the apparent significance was a sampling artifact. It is recorded here because it illustrates concretely why partial results from a non-randomised execution order must not be interpreted.
 
 ## 4.5 Latency — RQ2
 
 | Metric | System A | System B |
 |---|---|---|
-| Mean latency (s) | [TBD] | [TBD] |
-| Mean iterations | 1 | [TBD] (≤ 3) |
-| Overhead factor | — | [TBD]× |
+| Mean latency (s) | 8.61 (sd 2.81) | 24.06 (sd 15.62) |
+| Median latency (s) | 8.09 | 15.87 |
+| Mean iterations | 1 | 1.567 (≤ 3) |
+| Overhead factor | — | **2.79×** (mean) / 1.96× (median) |
+
+Iteration distribution for System B across 300 runs: **174** terminated after 1 iteration, **82** required 2, and **44** reached the 3-iteration cap. The Critic therefore requested at least one revision in 42% of cases.
+
+System B's latency variance is 5.6× that of the baseline (sd 15.62 vs 2.81), and its mean exceeds its median by 8.2 s — the distribution is strongly right-skewed by the 44 cases that hit the iteration cap. For deployment on low-connectivity smallholder infrastructure (§1.1), worst-case latency matters more than the mean, which makes this dispersion a substantive cost rather than a statistical footnote.
 
 ## 4.6 Cross-Domain Rejection — RQ3
 
 | System | Rejection accuracy on cross-domain cases |
 |---|---|
-| System A | [TBD] |
-| System B | [TBD] |
+| System A | **100%** (60/60) |
+| System B | **100%** (60/60) |
+
+Both systems correctly refused every cross-domain query across all 20 cases × 3 runs. Hallucination rate on this subset was 0.004 for A and 0.000 for B.
+
+**This is a ceiling effect, and it means RQ3 is not answered so much as voided.** With both systems at 100%, the task cannot discriminate between architectures: there is no headroom in which reflection could demonstrate a benefit. The correct interpretation is that the cross-domain task as designed was too easy — an off-crop image paired with a mismatched query is evidently detectable by a single-pass system, so the Critic has nothing left to catch. A harder rejection set (for example, closely-related species, or in-crop diseases absent from the knowledge base) would be required to test RQ3 meaningfully. This is recorded as a design limitation in §5.4.
+
+> ⚠️ **Do not report a p-value for this comparison.** `run_benchmark.py` emits `McNemar p = 0.0000` for RQ3, which is a **divide-by-zero artifact**: with zero discordant pairs, statsmodels computes `(|0 − 0| − 1)² / 0` and raises a RuntimeWarning. The result is not significant — it is undefined. The correct statement is that no statistical comparison is possible because the two systems performed identically.
 
 ## 4.7 Analysis
 
-*To be written after the run. Discuss where reflection helped most (expected: high-morphological-similarity pairs such as Early Blight vs. Septoria), where it did not, the latency cost against the accuracy gain, and any failure modes observed in the Critic's feedback.*
+**The central result is a null one: the reflection loop cost 2.79× latency and returned no measurable accuracy benefit.** Across 300 paired comparisons, neither hallucination rate nor faithfulness moved detectably, in aggregate or in any subgroup.
+
+Three observations follow from the data.
+
+**The loop was active, not inert.** The Critic requested revision in 42% of cases (126 of 300 runs went beyond a single iteration), so the null result is not an artifact of a loop that never fired. Revisions happened; they simply did not change measured quality in either direction. The McNemar discordant counts make this concrete: 30 cases where reflection produced a clean answer the baseline did not, against 34 in the opposite direction. Reflection was changing outputs — roughly symmetrically, and to no net benefit.
+
+**Faithfulness is low for both systems (0.125 and 0.120), which points at retrieval rather than reflection.** If only a small fraction of each diagnosis's claims are supported by retrieved context regardless of architecture, the binding constraint is what the retriever supplies, not how many times the generator reconsiders it. A reflection loop can only re-reason over the evidence it is given; it cannot supply evidence the retriever failed to find. This suggests the architecture was optimised at the wrong layer, and it is the most actionable finding in this study.
+
+**The judge shares a model with the Actor and Critic**, so a bias favouring text this model family produces would be present in both arms. Because the design is paired, such a bias substantially cancels in the A−B difference — which protects the *comparison* reported here, while leaving the absolute hallucination rates less trustworthy than the difference between them.
+
+This result is consistent with a broader finding in the literature that LLMs struggle to self-correct without external feedback signals (see Huang et al., ICLR 2024, on the limits of intrinsic self-correction). The contribution of this study is to test that claim in a **multimodal, retrieval-grounded agricultural diagnostic setting** — the gap identified in §2.5 — and to quantify the latency price paid for the absent benefit.
 
 ---
 
