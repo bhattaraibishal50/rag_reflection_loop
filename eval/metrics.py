@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import threading
 
 from config.config import cfg
 from src.llm.client import LLMClient
@@ -70,6 +71,51 @@ def _get_faithfulness():
     return _faithfulness
 
 
+# One long-lived loop on one background thread, shared by every RAGAS call.
+_loop: asyncio.AbstractEventLoop | None = None
+_loop_thread: threading.Thread | None = None
+_loop_lock = threading.Lock()
+
+
+def _get_loop() -> asyncio.AbstractEventLoop:
+    """Return the dedicated RAGAS event loop, starting it on first use.
+
+    WHY THIS EXISTS (do not simplify back to `asyncio.run`, and do not close
+    the loop between calls) — two distinct failures are being avoided:
+
+    1. `RuntimeError: Timeout should be used inside a task`.
+       Importing RAGAS pulls in nest_asyncio, which monkeypatches `asyncio.run`
+       and `BaseEventLoop.run_until_complete` with hand-rolled task stepping. On
+       CPython 3.14 that stepping leaves `asyncio.current_task()` returning None,
+       so the `asyncio.wait_for` inside `Metric.single_turn_ascore` raises and
+       every score comes back NaN. Running on our own loop via
+       `run_coroutine_threadsafe` creates a genuine Task, so the timeout works.
+
+    2. `RuntimeError: Event loop is closed`.
+       The Gemini client underneath RAGAS holds grpc.aio channels bound to the
+       loop that created them. A fresh-loop-per-call design scores the first
+       sample and then fails on every subsequent one. Hence one persistent loop.
+
+    Verified on ragas 0.2.15 / nest-asyncio 1.6.0 / grpcio aio / CPython 3.14.7.
+    """
+    global _loop, _loop_thread
+    with _loop_lock:
+        if _loop is None or _loop.is_closed():
+            _loop = asyncio.new_event_loop()
+            _loop_thread = threading.Thread(
+                target=_loop.run_forever, name="ragas-loop", daemon=True
+            )
+            _loop_thread.start()
+    return _loop
+
+
+def _run_coro_isolated(make_coro, timeout: float = 300.0):
+    """Submit a coroutine to the dedicated RAGAS loop and wait for its result."""
+    loop = _get_loop()
+    future = asyncio.run_coroutine_threadsafe(make_coro(), loop)
+    return future.result(timeout=timeout)
+
+
 def faithfulness_score(diagnosis: str, context: str | list[str], query: str) -> float:
     """RAGAS faithfulness in [0, 1]: fraction of the diagnosis's claims that are
     supported by the retrieved context. Higher = less hallucination.
@@ -84,8 +130,10 @@ def faithfulness_score(diagnosis: str, context: str | list[str], query: str) -> 
         response=diagnosis,
         retrieved_contexts=[c for c in contexts if c.strip()],
     )
-    # single_turn_ascore is async; run it on a fresh event loop for CLI/batch use.
-    return asyncio.run(metric.single_turn_ascore(sample))
+    # Call the inner coroutine directly: the public single_turn_ascore wraps it in
+    # asyncio.wait_for, which is the exact call that breaks under nest_asyncio on
+    # 3.14. The inner method performs the same scoring without the timeout wrapper.
+    return _run_coro_isolated(lambda: metric._single_turn_ascore(sample, callbacks=None))
 
 
 def rejection_correct(diagnosis: str, true_label: str) -> bool:
